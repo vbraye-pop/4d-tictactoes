@@ -1,0 +1,4 @@
+run,harness,model,provider,billing,start_utc,end_utc,duration_s,tokens_in,tokens_out,tokens_cached,cost_usd,result,notes
+claude-code-opus5,claude-code,claude-opus-5,anthropic,flat-monthly,,,,,,,,
+oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,openrouter,per-token,,,,,,,,
+oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,openrouter,per-token,,,,,,,,
