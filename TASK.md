@@ -23,7 +23,7 @@ Equivalently, a cross is two straight lines of three consecutive cells (in any o
 
 Intuition check: restricted to a 2D 3x3 board, this rule gives exactly six shapes. The plus (+), the X (both diagonals), and four mixed shapes made of one full line plus one diagonal crossing at the center. The 4D rule is the same idea in four dimensions.
 
-There are exactly **1548** distinct winning crosses on the 3x3x3x3 board. Enumerate them in your rules engine and use this number to verify your implementation. A player wins the moment their move completes any one of these crosses.
+There are exactly **1548** distinct winning crosses on the 3x3x3x3 board. Use this number to verify your implementation. A player wins the moment their move completes any one of these crosses.
 
 ### AI opponent
 
@@ -40,9 +40,9 @@ Apply the AI move with a short bounded delay so a human can follow the game.
 ## UI requirements
 
 - The game runs in a browser at a localhost URL served by the Python server.
-- How the player navigates the 4D board is your design decision. Slices, stacked layers, a 3D view plus an axis slider, or another approach. Whatever you build, it must be easy to find, read, and play any of the 81 cells.
-- The UI must always show whose turn it is and which slice or view is currently displayed (the current 4D coordinates). Every cell must be reachable and its state must be visible.
-- Clicking an empty visible cell places the current player's mark there. Clicking an occupied cell, or any cell after the game has ended, does nothing.
+- How the player navigates the 4D board is your design decision. Whatever you build, it must be easy to find, read, and play any of the 81 cells.
+- The UI must always show whose turn it is and which part of the 4D board is currently displayed (the current 4D coordinates). Every cell must be reachable and its state must be visible.
+- Clicking an empty cell in the current view places the current player's mark there. Clicking an occupied cell, or any cell after the game has ended, does nothing.
 - On a win, declare the winner clearly and highlight all five cells of the winning cross, including how the cross spans the dimensions. Lock the board.
 - On a draw, declare it clearly.
 - Provide a new game control, and let the player choose between Human vs Human and Human vs AI.
@@ -58,10 +58,10 @@ Apply the AI move with a short bounded delay so a human can follow the game.
 
 ## Tests
 
-- Write automated tests for the game logic (the rules engine), not for the UI.
+- Write automated tests for the game logic, not for the UI.
 - Cover at minimum: move legality, win detection, draw detection, and the AI taking a win and blocking a win.
-- Include a test that your enumeration finds exactly the 1548 crosses and that every reported cross is a valid 5-cell cross.
-- The suite must run with a single documented command (`python -m pytest` or `python -m unittest`).
+- Include a test that every one of the 1548 winning crosses is detected as a win when a player completes it, and that a set of 5 cells which is not a cross is not detected as a win.
+- The suite must run with a single documented command.
 
 ## Deliverables
 
