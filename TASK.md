@@ -29,11 +29,12 @@ There are exactly **1548** distinct winning crosses on the 3x3x3x3 board. Use th
 
 The game offers two modes: Human vs Human and Human vs AI.
 
-The AI does not need to be perfect, but it must satisfy all three of the following:
+The AI must be a strong player and must satisfy all of the following:
 
 - Take an immediate winning move when one exists.
 - Block the cell where the opponent would complete a cross on the next turn.
-- Otherwise play a reasonable heuristic move. Prefer the center, build toward crosses, and never play random cells.
+- Play a provably optimal move in endgame positions. Win when the position is winning, and never lose when at least a draw is available.
+- In all other positions, play a strong principled move that builds toward crosses. Never play randomly.
 
 Apply the AI move with a short bounded delay so a human can follow the game.
 
@@ -59,7 +60,7 @@ Apply the AI move with a short bounded delay so a human can follow the game.
 ## Tests
 
 - Write automated tests for the game logic, not for the UI.
-- Cover at minimum: move legality, win detection, draw detection, and the AI taking a win and blocking a win.
+- Cover at minimum: move legality, win detection, draw detection, the AI taking a win, blocking a win, and the AI playing optimally in endgame positions.
 - Include a test that every one of the 1548 winning crosses is detected as a win when a player completes it, and that a set of 5 cells which is not a cross is not detected as a win.
 - The suite must run with a single documented command.
 
@@ -78,5 +79,5 @@ Before you stop, all of the following must be true:
 2. The server starts with the single documented command, and the page loads in a browser with no console errors.
 3. You played a real game in the browser: a win was detected and highlighted, the board locked, and new game worked.
 4. The draw path works.
-5. In AI mode, the AI takes an available win and blocks an imminent opponent win.
+5. In AI mode, the AI takes an available win, blocks an imminent opponent win, and plays optimally in endgame positions.
 6. README.md matches what the project actually does.
