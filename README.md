@@ -14,17 +14,21 @@ The agent directories are gitignored here, so this repo tracks only the harness 
 
 ## Launching a run
 
-Run the matching command from inside the agent's directory. It starts an interactive session with the task prompt already sent, so the agent begins planning and executing immediately.
+`./run.sh <target>` handles the whole run: sanity-checks the agent directory (baseline commit, clean tree, TASK.md present, harness on PATH), launches the harness in it with the task prompt, and records the run into `stats.csv` when the harness exits.
 
-- `claude-code-opus5/`: `claude --model opus "Read TASK.md and start planning and executing the task."`
-- `oh-my-humanize-qwen38/`: `omh --model openrouter/qwen/qwen3.8-27b "Read TASK.md and start planning and executing the task."`
-- `oh-my-humanize-kimi-k3/`: `omh --model <slug> "Read TASK.md and start planning and executing the task."`
+- `./run.sh opus` — Claude Code, model `opus`, in `claude-code-opus5/`
+- `./run.sh qwen` — omh, `openrouter/qwen/qwen3.8-27b`, in `oh-my-humanize-qwen38/`
+- `./run.sh kimi` — omh, `openrouter/moonshotai/kimi-k3`, in `oh-my-humanize-kimi-k3/`
 
-Pin the model under test in both harnesses, since a wrong default silently changes what you are benchmarking. `omh models` lists the slugs for the kimi run. Drop the flag if your default is already the model under test.
+Any target containing the name matches, e.g. `./run.sh qwen/qwen3.8-27B`.
+
+Flags: `--reset` restores the agent directory to its baseline before the run. `--dry-run` runs the sanity checks and prints the launch command without starting anything.
+
+The model is pinned per target on purpose, since a wrong default silently changes what you are benchmarking.
 
 ## Recording stats
 
-For each run, record wall-clock time with `date -u` right before launch and right after the agent stops. Those go in `start_utc` and `end_utc`, duration is the difference.
+`run.sh` fills `start_utc`, `end_utc`, `duration_s`, the token columns and `cost_usd` automatically when the harness exits (normal exit or Ctrl-C). The sources below are for cross-checking a row by hand.
 
 ### Claude Code (subscription)
 
