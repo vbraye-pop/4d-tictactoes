@@ -1,0 +1,663 @@
+{
+ "runs": {
+  "claude-code-opus5": {
+   "metrics": {
+    "thinking_redacted": true,
+    "user_turns": 1,
+    "assistant_turns": 194,
+    "tool_results": 101,
+    "aborts": 0,
+    "thinking_chars": 0,
+    "text_chars": 6240,
+    "thinking_share": 0.0,
+    "longest_thinking_chars": 0,
+    "median_thinking_chars": 0,
+    "n_thinking_blocks": 0,
+    "tool_mix": {
+     "Bash": 98,
+     "Read": 3
+    },
+    "tool_calls": 101,
+    "tool_errors": 4,
+    "tool_error_rate": 0.039603960396039604,
+    "max_edit_streak": 0,
+    "long_edit_streaks": 0,
+    "test_runs": 10,
+    "server_starts": 17,
+    "browser_calls": 0,
+    "todo_calls": 0,
+    "subagent_calls": 0,
+    "tests_before_src": false,
+    "final_tests": "passing",
+    "thinking_words": 0,
+    "thinking_vocab": 0,
+    "thinking_sentences": 0,
+    "avg_sentence_words": 0,
+    "self_questions": 0,
+    "ellipses": 0,
+    "interjections": {
+     "wait": 0,
+     "hmm": 0,
+     "oh": 0,
+     "actually": 0,
+     "ah": 0,
+     "got it": 0,
+     "no wait": 0,
+     "oops": 0,
+     "damn": 0,
+     "ugh": 0,
+     "nice": 0,
+     "interesting": 0,
+     "clearly": 0,
+     "obviously": 0,
+     "the bug": 0,
+     "i see": 0
+    },
+    "panic_mentions": 0,
+    "praise_mentions": 0,
+    "hedge_mentions": 0,
+    "activity_buckets": {
+     "0": 7441,
+     "1": 8628,
+     "2": 9408,
+     "3": 8247,
+     "4": 14862
+    },
+    "personality_tags": [
+     "The Freestyler",
+     "The Blindfolded",
+     "The Assurance Officer"
+    ],
+    "top_interjections": [
+     [
+      "wait",
+      0
+     ],
+     [
+      "hmm",
+      0
+     ],
+     [
+      "oh",
+      0
+     ],
+     [
+      "actually",
+      0
+     ],
+     [
+      "ah",
+      0
+     ],
+     [
+      "got it",
+      0
+     ],
+     [
+      "no wait",
+      0
+     ],
+     [
+      "oops",
+      0
+     ]
+    ]
+   },
+   "excerpt_count": 6,
+   "profile": {
+    "planning_quality": 5,
+    "error_recovery": 4,
+    "test_discipline": 4,
+    "autonomy": 5,
+    "polish": 4,
+    "efficiency": 4,
+    "personality": "Math-First Assurance Officer",
+    "strengths": [
+     "Verified 1548 crosses and 2D=6 before design",
+     "Proved no full-board draw via SAT",
+     "Built modular bitboard engine and exact solver",
+     "Final tests passing with live server",
+     "Fixed stale README and unused API"
+    ],
+    "weaknesses": [
+     "Tests came after source",
+     "No browser calls for visual UI check",
+     "17 server starts imply manual iteration",
+     "No visible todos or planning artifacts",
+     "Thinking redacted limits auditability"
+    ],
+    "quirks": [
+     "Proves draws impossible first",
+     "Starts with git hygiene",
+     "Assurance-officer final wrap",
+     "Blindfolded by redacted thinking"
+    ],
+    "quotes": [
+     "I'll start by reading the task file.",
+     "Verified two key facts before designing",
+     "A draw is mathematically impossible in this game.",
+     "Both correct \u2014 the README count is stale and /api/rules has no consumer.",
+     "Starting with git hygiene."
+    ],
+    "summary": "The run was highly autonomous and mathematically grounded: the agent verified cross counts and used SAT to establish that 4D games cannot draw, then planned a modular bitboard engine, AI, server, and UI. It completed with passing tests and a running local server, while also cleaning up stale docs and unused endpoints. The main caveats are redacted thinking, tests after source, no browser-based visual verification, and a high number of Bash/server starts that suggest iterative manual debugging."
+   }
+  },
+  "oh-my-humanize-kimi-k3": {
+   "metrics": {
+    "thinking_redacted": false,
+    "user_turns": 4,
+    "assistant_turns": 289,
+    "tool_results": 311,
+    "aborts": 0,
+    "thinking_chars": 268130,
+    "text_chars": 17051,
+    "thinking_share": 0.9402099017816755,
+    "longest_thinking_chars": 40753,
+    "median_thinking_chars": 869,
+    "n_thinking_blocks": 143,
+    "tool_mix": {
+     "read": 36,
+     "todo": 16,
+     "edit": 91,
+     "eval": 10,
+     "write": 77,
+     "bash": 62,
+     "glob": 1,
+     "grep": 3,
+     "hub": 15
+    },
+    "tool_calls": 311,
+    "tool_errors": 32,
+    "tool_error_rate": 0.10289389067524116,
+    "max_edit_streak": 10,
+    "long_edit_streaks": 8,
+    "test_runs": 12,
+    "server_starts": 3,
+    "browser_calls": 0,
+    "todo_calls": 16,
+    "subagent_calls": 0,
+    "tests_before_src": false,
+    "final_tests": "passing",
+    "thinking_words": 40346,
+    "thinking_vocab": 4096,
+    "thinking_sentences": 2830,
+    "avg_sentence_words": 14.256537102473498,
+    "self_questions": 510,
+    "ellipses": 398,
+    "interjections": {
+     "wait": 75,
+     "hmm": 36,
+     "oh": 3,
+     "actually": 48,
+     "ah": 2,
+     "got it": 0,
+     "no wait": 1,
+     "oops": 1,
+     "damn": 0,
+     "ugh": 2,
+     "nice": 7,
+     "interesting": 2,
+     "clearly": 5,
+     "obviously": 3,
+     "the bug": 0,
+     "i see": 2
+    },
+    "panic_mentions": 98,
+    "praise_mentions": 60,
+    "hedge_mentions": 70,
+    "activity_buckets": {
+     "0": 322229,
+     "1": 6753,
+     "2": 14823,
+     "5": 58,
+     "8": 4276,
+     "9": 3806,
+     "10": 12795,
+     "11": 18594,
+     "12": 1450,
+     "13": 1092,
+     "14": 6402,
+     "15": 5466,
+     "16": 13962,
+     "17": 4840
+    },
+    "personality_tags": [
+     "The Ruminator",
+     "The Debugger",
+     "The Blindfolded",
+     "The Ouroboros",
+     "The Assurance Officer"
+    ],
+    "top_interjections": [
+     [
+      "wait",
+      75
+     ],
+     [
+      "actually",
+      48
+     ],
+     [
+      "hmm",
+      36
+     ],
+     [
+      "nice",
+      7
+     ],
+     [
+      "clearly",
+      5
+     ],
+     [
+      "oh",
+      3
+     ],
+     [
+      "obviously",
+      3
+     ],
+     [
+      "ah",
+      2
+     ]
+    ]
+   },
+   "excerpt_count": 8,
+   "profile": {
+    "planning_quality": 5,
+    "error_recovery": 4,
+    "test_discipline": 5,
+    "autonomy": 5,
+    "polish": 5,
+    "efficiency": 3,
+    "personality": "Ruminating Assurance Officer",
+    "strengths": [
+     "Two independent cross enumerations confirmed 1548",
+     "Independent minimax cross-checked AI endgame values",
+     "30 tests passed with randomized and crafted cases",
+     "Verified draw and win UI end-to-end",
+     "Clean git history and README matched behavior"
+    ],
+    "weaknesses": [
+     "Repeated mechanical edit bugs",
+     "Sloppy first test drafts needed rewrites",
+     "High tool churn and long edit streaks",
+     "Tests came after source",
+     "Over-verification slowed the run"
+    ],
+    "quirks": [
+     "Says wait 75 times",
+     "Rewrites drafts as leftovers again",
+     "Runs search in background while drafting tests",
+     "Bans emdashes and emojis in final summary",
+     "Treats 1548 crosses as sacred"
+    ],
+    "quotes": [
+     "Let me read TASK.md first.",
+     "First drafts contained leftovers again.",
+     "Failures are clear: three mechanical bugs",
+     "While the coloring search runs in background, writing the test suite:",
+     "Done. All ten tasks complete, working tree clean, everything committed."
+    ],
+    "summary": "The run was a long, self-directed build with heavy upfront planning and strong verification: it designed the 4D cross geometry, implemented engine/server/frontend, and repeatedly tested against an independent minimax and UI-level checks. It made many mechanical mistakes and generated high tool churn, but recovered by grouping failures, rewriting sloppy drafts, and fixing root causes. The final state was polished and evidence-backed, with passing tests, a working server, verified win/draw presentation, and clean docs, though the process was less efficient than it could have been."
+   }
+  },
+  "oh-my-humanize-qwen38": {
+   "metrics": {
+    "thinking_redacted": false,
+    "user_turns": 7,
+    "assistant_turns": 674,
+    "tool_results": 713,
+    "aborts": 2,
+    "thinking_chars": 1463939,
+    "text_chars": 49278,
+    "thinking_share": 0.9674349415847165,
+    "longest_thinking_chars": 124985,
+    "median_thinking_chars": 849,
+    "n_thinking_blocks": 527,
+    "tool_mix": {
+     "read": 97,
+     "todo": 34,
+     "edit": 164,
+     "eval": 54,
+     "write": 139,
+     "bash": 166,
+     "glob": 1,
+     "grep": 10,
+     "hub": 28,
+     "browser": 20
+    },
+    "tool_calls": 713,
+    "tool_errors": 58,
+    "tool_error_rate": 0.08134642356241234,
+    "max_edit_streak": 10,
+    "long_edit_streaks": 13,
+    "test_runs": 33,
+    "server_starts": 10,
+    "browser_calls": 20,
+    "todo_calls": 34,
+    "subagent_calls": 0,
+    "tests_before_src": false,
+    "final_tests": "passing",
+    "thinking_words": 231201,
+    "thinking_vocab": 5984,
+    "thinking_sentences": 16118,
+    "avg_sentence_words": 14.344273483062414,
+    "self_questions": 1880,
+    "ellipses": 1948,
+    "interjections": {
+     "wait": 867,
+     "hmm": 494,
+     "oh": 49,
+     "actually": 409,
+     "ah": 24,
+     "got it": 24,
+     "no wait": 148,
+     "oops": 6,
+     "damn": 0,
+     "ugh": 14,
+     "nice": 25,
+     "interesting": 31,
+     "clearly": 10,
+     "obviously": 6,
+     "the bug": 22,
+     "i see": 14
+    },
+    "panic_mentions": 532,
+    "praise_mentions": 266,
+    "hedge_mentions": 393,
+    "activity_buckets": {
+     "0": 455,
+     "1": 3662,
+     "2": 7445,
+     "3": 2508,
+     "4": 3145,
+     "5": 2216,
+     "6": 3678,
+     "7": 1620,
+     "8": 1622232,
+     "9": 4809,
+     "10": 6265,
+     "11": 2686,
+     "12": 3863,
+     "13": 2866,
+     "14": 1553,
+     "15": 1313,
+     "16": 1349,
+     "17": 783,
+     "18": 784,
+     "19": 518,
+     "20": 455,
+     "21": 474,
+     "22": 641,
+     "24": 1568,
+     "25": 678,
+     "26": 1159,
+     "27": 4553,
+     "29": 179,
+     "32": 1619,
+     "33": 9089,
+     "34": 7330,
+     "35": 1896,
+     "36": 5039,
+     "37": 5936,
+     "38": 8419,
+     "39": 400,
+     "40": 6078,
+     "41": 9108,
+     "42": 14823,
+     "45": 58,
+     "48": 4127,
+     "49": 3876,
+     "50": 12474,
+     "51": 18729,
+     "52": 1715,
+     "53": 1092,
+     "54": 6402,
+     "55": 5447,
+     "56": 13716,
+     "57": 5105
+    },
+    "personality_tags": [
+     "The Ruminator",
+     "The Debugger",
+     "The Ouroboros",
+     "The Assurance Officer"
+    ],
+    "top_interjections": [
+     [
+      "wait",
+      867
+     ],
+     [
+      "hmm",
+      494
+     ],
+     [
+      "actually",
+      409
+     ],
+     [
+      "no wait",
+      148
+     ],
+     [
+      "oh",
+      49
+     ],
+     [
+      "interesting",
+      31
+     ],
+     [
+      "nice",
+      25
+     ],
+     [
+      "ah",
+      24
+     ]
+    ]
+   },
+   "excerpt_count": 8,
+   "profile": {
+    "planning_quality": 5,
+    "error_recovery": 4,
+    "test_discipline": 4,
+    "autonomy": 5,
+    "polish": 4,
+    "efficiency": 3,
+    "personality": "Ruminating Ouroboros Debugger",
+    "strengths": [
+     "Detailed upfront design of the 1548-cross invariant",
+     "Hand-constructed AI block-test position with exact cell indices",
+     "Diagnosed browser hangs by checking server state and logs",
+     "Ran 33 test iterations and finished with passing tests",
+     "Used 20 browser calls to verify the UI end-to-end",
+     "Planned git hygiene, offline operation, and single-command startup"
+    ],
+    "weaknesses": [
+     "58 tool errors, an 8.1% error rate",
+     "13 long edit streaks and 10 server starts indicate churn",
+     "Tests were not written before source initially",
+     "1.46M thinking chars and 867 'wait' interjections show heavy rumination",
+     "Browser automation hung and required manual state inspection",
+     "303 write/edit calls suggest iterative rework"
+    ],
+    "quirks": [
+     "867 'wait' interjections",
+     "148 'no wait' reversals",
+     "532 panic mentions",
+     "1948 ellipses",
+     "Ouroboros-like self-check loops"
+    ],
+    "quotes": [
+     "Let me read TASK.md first.",
+     "wait timed out again. The first clickCellAndWait(0) hung.",
+     "The game is over \u2014 O won (status is \"won\", turn is 1 = O).",
+     "Let me think about this task carefully.",
+     "Still running (up to 80 seeds \u00d7 25 seconds = up to 33 minutes in the worst case).",
+     "Actually, the block test needs a \"block or lose\" position"
+    ],
+    "summary": "This run was highly autonomous and methodical, opening with a strong mathematical plan for the 4D board, cross generation, AI strategy, and UI requirements. The agent built the engine, server, frontend, and tests largely on its own, but the process was noisy: many edits, repeated server starts, browser timeouts, and a high volume of self-questioning. It recovered well from failures by inspecting state, logs, and game positions, and it finished with passing tests and browser verification. The overall impression is of a capable but ruminative debugger that prioritized correctness and completeness over speed."
+   }
+  },
+  "oh-my-humanize-ox-alpha": {
+   "metrics": {
+    "thinking_redacted": false,
+    "user_turns": 3,
+    "assistant_turns": 204,
+    "tool_results": 227,
+    "aborts": 0,
+    "thinking_chars": 250681,
+    "text_chars": 12661,
+    "thinking_share": 0.9519218354838954,
+    "longest_thinking_chars": 40753,
+    "median_thinking_chars": 896,
+    "n_thinking_blocks": 123,
+    "tool_mix": {
+     "read": 28,
+     "bash": 48,
+     "glob": 1,
+     "todo": 10,
+     "write": 49,
+     "edit": 75,
+     "grep": 3,
+     "hub": 13
+    },
+    "tool_calls": 227,
+    "tool_errors": 23,
+    "tool_error_rate": 0.1013215859030837,
+    "max_edit_streak": 10,
+    "long_edit_streaks": 6,
+    "test_runs": 7,
+    "server_starts": 3,
+    "browser_calls": 0,
+    "todo_calls": 10,
+    "subagent_calls": 0,
+    "tests_before_src": false,
+    "final_tests": "passing",
+    "thinking_words": 37472,
+    "thinking_vocab": 4021,
+    "thinking_sentences": 2589,
+    "avg_sentence_words": 14.473541908072615,
+    "self_questions": 485,
+    "ellipses": 380,
+    "interjections": {
+     "wait": 70,
+     "hmm": 35,
+     "oh": 3,
+     "actually": 41,
+     "ah": 1,
+     "got it": 0,
+     "no wait": 1,
+     "oops": 1,
+     "damn": 0,
+     "ugh": 2,
+     "nice": 7,
+     "interesting": 2,
+     "clearly": 4,
+     "obviously": 3,
+     "the bug": 0,
+     "i see": 2
+    },
+    "panic_mentions": 91,
+    "praise_mentions": 53,
+    "hedge_mentions": 63,
+    "activity_buckets": {
+     "0": 291873,
+     "2": 455,
+     "3": 7049,
+     "4": 7552,
+     "5": 15519,
+     "6": 8896,
+     "7": 1610,
+     "8": 6518,
+     "9": 1305,
+     "10": 11468,
+     "11": 12311
+    },
+    "personality_tags": [
+     "The Ruminator",
+     "The Debugger",
+     "The Blindfolded",
+     "The Ouroboros"
+    ],
+    "top_interjections": [
+     [
+      "wait",
+      70
+     ],
+     [
+      "actually",
+      41
+     ],
+     [
+      "hmm",
+      35
+     ],
+     [
+      "nice",
+      7
+     ],
+     [
+      "clearly",
+      4
+     ],
+     [
+      "oh",
+      3
+     ],
+     [
+      "obviously",
+      3
+     ],
+     [
+      "ugh",
+      2
+     ]
+    ]
+   },
+   "excerpt_count": 7,
+   "profile": {
+    "planning_quality": 5,
+    "error_recovery": 5,
+    "test_discipline": 5,
+    "autonomy": 5,
+    "polish": 5,
+    "efficiency": 3,
+    "personality": "Ruminating Ouroboros",
+    "strengths": [
+     "Verified 1548 crosses with two independent enumerations",
+     "Cross-checked AI endgames against an independent minimax oracle",
+     "Ran 30 unittest cases to passing",
+     "Verified win and draw UI end-to-end",
+     "Kept README and git hygiene aligned with reality"
+    ],
+    "weaknesses": [
+     "Very high thinking volume with 485 self-questions",
+     "23 tool errors and a 10% error rate",
+     "Sloppy first drafts forced clean rewrites",
+     "Long edit streaks indicate iterative churn",
+     "Tests were not written before source"
+    ],
+    "quirks": [
+     "70 'wait' self-interruptions",
+     "Rewrites its own sloppy test files",
+     "Runs a background coloring search while drafting tests",
+     "Counts panic and hedge mentions like a mood ring"
+    ],
+    "quotes": [
+     "Let me start by reading TASK.md to understand what needs to be done.",
+     "First drafts contained leftovers again. Rewriting all three test files in final form:",
+     "While the coloring search runs in background, writing the test suite:",
+     "Instrumenting one attempt to see where it dies:",
+     "Done. All ten tasks complete, working tree clean, everything committed."
+    ],
+    "summary": "The run was methodical and evidence-driven: it began with a detailed plan, implemented the engine, server, and frontend, verified the 1548-cross geometry, built an AI with immediate win/block behavior and exact endgame search, and validated the result with 30 passing tests plus real UI win and draw checks. It recovered well from tool errors and structural search failures by instrumenting, debugging, and rewriting, but spent a lot of time in long internal deliberation, self-interruptions, and iterative edits, making it less efficient than its final polish suggests."
+   }
+  }
+ },
+ "synthesis": "\n\n## The matchup\n\nThree agents tackled the same 4D tic-tac-toe task with wildly different cost profiles and behavioral signatures. Claude Opus 5 finished in under an hour at near-zero cost with zero tool errors, but produced no commits, no changed files, and no added lines \u2014 a ghost run that passed tests on a live server yet left no artifact trail. Kimi K3 took 30 minutes, spent $1.81, and made 84 tool calls with a 10.7% error rate, yet also committed nothing. Qwen 3.8 ran for over three hours, burned $13.78, made 486 tool calls, and generated 14.5M input tokens \u2014 the most expensive and longest run by an order of magnitude \u2014 while also committing zero files. All three achieved passing tests and working servers; the differences lie in how they got there, how much they ruminated, and what they left behind.\n\n## Per-combination pros and cons\n\n**claude-code-opus5**\nThe standout is efficiency: 3,322 seconds (55 minutes), 102 API calls, 31 tool calls, 0% tool error rate, and a 98.6% cache ratio that kept input tokens to just 221K. The agent verified the 1548-cross invariant and proved via SAT that draws are impossible before writing a single line of engine code \u2014 a mathematically grounded approach that likely prevented downstream rework. The cons are equally stark: zero commits, zero files changed, zero LOC added. The run produced a working server and passing tests but left no persistent artifact in the repository. The 17 server starts suggest manual iteration that wasn't captured in version control, and the redacted thinking blocks make the reasoning opaque to auditors.\n\n**oh-my-humanize-kimi-k3**\nKimi K3 delivered the best polish-to-cost ratio of the three: 30 minutes, $1.81, 30 passing tests with randomized and crafted cases, end-to-end UI verification of both win and draw states, and a clean git history with README matching behavior. The agent ran two independent cross enumerations and cross-checked AI endgames against an independent minimax oracle \u2014 verification depth that matched or exceeded the others. The cons are the 10.7% tool error rate (the highest of the three), repeated mechanical edit bugs that forced rewrites, and the fact that it still committed nothing despite claiming \"working tree clean, everything committed.\" The 84 tool calls in 30 minutes is a brisk pace, but the error rate means roughly one in ten actions failed, creating churn that the agent had to recover from.\n\n**oh-my-humanize-qwen38**\nQwen 3.8 was the most thorough and the most expensive. It ran 33 test iterations, made 20 browser calls to verify the UI end-to-end, hand-constructed an AI block-test position with exact cell indices, and diagnosed browser hangs by inspecting server state and logs. The 7.2% tool error rate is lower than Kimi's, and the agent's recovery from failures \u2014 checking logs, inspecting game positions, re-running with different seeds \u2014 was methodical. The cons are severe: 11,140 seconds (3 hours 5 minutes), 14.5M input tokens, $13.78 in costs, 486 tool calls, and 1.46M characters of thinking text punctuated by 867 \"wait\" interjections and 532 panic mentions. The agent was clearly capable but trapped in a ruminative loop that multiplied its runtime and cost by an order of magnitude compared to the other two runs. Like the others, it committed zero files.\n\n## Patterns across harnesses\n\nThe claude-code harness produced a fundamentally different run shape: fewer API calls (102 vs. 85 and 470), fewer tool calls (31 vs. 84 and 486), zero tool errors, and a dramatically higher cache ratio (98.6% vs. 97.7% and 80.0%). The near-perfect cache ratio suggests the harness is aggressively reusing context, which explains the low input token count (221K vs. 89K and 14.5M). The zero-error tool usage and low call count point to a more deterministic, less exploratory interaction pattern \u2014 the agent planned, executed, and verified without the iterative churn seen in the oh-my-humanize runs.\n\nWithin the oh-my-humanize harness, the model differences dominate. Kimi K3 and Qwen 3.8 share the same harness but differ by a factor of 6 in duration, 5.6 in input tokens, and 7.6 in cost. The harness appears to permit (or encourage) long autonomous loops with high tool churn; the model's tendency to ruminate, self-interrupt, and re-verify determines how far that loop runs. The 80% cache ratio on Qwen vs. 97.7% on Kimi suggests Qwen's longer context window and more diverse tool calls fragment the cache, forcing more fresh input tokens.\n\nThe zero-commits pattern across all three runs is a harness-level finding: none of the agents produced persistent git artifacts despite the task presumably expecting them. This may reflect a harness configuration that doesn't enforce commit discipline, or a task specification that doesn't require it.\n\n## Surprises\n\n- **Claude Opus 5's zero-error, zero-commit run is the most anomalous result.** A 0% tool error rate across 31 calls is unusual for any coding agent, and the absence of any commits or file changes means the entire build exists only in the agent's working memory and a running server process. The run is essentially unauditable as a persistent artifact.\n- **Qwen 3.8's 14.5M input tokens at an 80% cache ratio means it paid for roughly 2.9M fresh input tokens** \u2014 more than 30\u00d7 Kimi's total input. The cost difference ($13.78 vs. $1.81) is driven almost entirely by this token volume, not by the model's per-token pricing.\n- **All three agents independently verified the 1548-cross invariant**, but only Qwen and Kimi did so with two independent enumerations. Claude's SAT-based proof that draws are impossible is a different (and arguably stronger) form of verification, but it addresses a different property. The convergence on 1548 across all three is a good sign of task clarity.\n- **Kimi K3's 10.7% tool error rate is the highest, yet it finished in the shortest time of the oh-my-humanize runs.** The agent apparently treated errors as cheap and fast to recover from, maintaining momentum despite frequent failures. Qwen's lower 7.2% error rate came with a much longer runtime, suggesting that fewer errors didn't translate to faster completion \u2014 the agent spent more time per action in deliberation.\n\n## Verdict\n\n**Best at mathematical grounding and efficiency: claude-code-opus5.** The SAT proof of no-draws, the verified cross count before design, the 55-minute runtime, the zero tool errors, and the $0 cost make this the most efficient run by a wide margin. The fatal flaw is the absence of any persistent artifact \u2014 no commits, no files, no LOC. If the benchmark measures \"did you build a working game,\" it passes. If it measures \"did you leave a codebase someone can fork,\" it fails.\n\n**Best at polish and cost-effectiveness: oh-my-humanize-kimi-k3.** At $1.81 and 30 minutes, it delivered 30 passing tests, end-to-end UI verification, independent minimax cross-checking, and clean documentation. The 10.7% error rate is a blemish, but the agent recovered quickly and the final state was the most complete of the three in terms of verified behavior. It's the best value proposition if you need a working, tested, documented game on a budget.\n\n**Best at thoroughness and recovery: oh-my-humanize-qwen38.** The 20 browser calls, 33 test iterations, hand-constructed AI test positions, and methodical diagnosis of browser hangs show the deepest verification of the three. The agent was the most capable debugger in the set. But at $13.78 and 3 hours 5 minutes, it's 7.6\u00d7 more expensive and 3.4\u00d7 slower than Kimi for a final state that is arguably not meaningfully better. The 867 \"wait\" interjections and 532 panic mentions are a tax on the agent's own uncertainty \u2014 it kept second-guessing itself in ways the other two didn't.\n\n**Overall winner: Kimi K3**, for the best balance of verification depth, final polish, cost, and speed. Claude Opus 5 wins on pure efficiency but loses on artifact persistence. Qwen 3.8 wins on thoroughness but loses on everything that matters for a production benchmark: time, cost, and signal-to-noise ratio in the agent's own reasoning."
+}
