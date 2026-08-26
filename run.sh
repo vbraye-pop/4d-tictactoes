@@ -83,7 +83,7 @@ STATUS="$(git_ok status --porcelain)"
 if [ "$HEAD" != "$BASELINE" ]; then
   die "$DIR is not at its baseline (HEAD $HEAD, baseline $BASELINE). Pass --reset to restore."
 fi
-if [ "$STATUS" != "?? TASK.md" ]; then
+if [ "$STATUS" != "?? TASK.md" ] && [ -n "$STATUS" ]; then
   die "$DIR working tree is not pristine:
 $STATUS
 Pass --reset to restore the baseline."
