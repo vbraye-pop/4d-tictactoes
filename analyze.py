@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 BASELINE = "1e40f677"
+BASELINE_HASH = "1e40f677"
 PROMPT = timezone.utc
 
 def ts(s):
@@ -100,7 +101,7 @@ def repo_metrics(dir_name):
     r = {"commits": 0, "files": 0, "added": 0}
     if not (base / ".git").exists():
         return r
-    log = git(base, "log", "--oneline", BASELINE + "..HEAD").splitlines()
+    log = git(base, "log", "--oneline", BASELINE_HASH + "..HEAD").splitlines()
     r["commits"] = len(log)
     diff = git(base, "diff", "--stat", BASELINE)
     if ", " in diff:
@@ -164,8 +165,8 @@ def build_markdown(reports):
     for r in reports:
         tokens = r["tin"] + r["tout"] + r["tcached"]
         md.append(f"- **{r['run']}**: {fmt_duration(r['dur'])}, {r['calls']} calls, {tokens:,} tokens ({r['cache_ratio']:.1%} cached), "
-                  f"{r['repo']['commits']} commits, {r['repo']['added']} lines, {tokens/r['repo']['commits']:,.0f} tok/commit, "
-                  f"{tokens/r['repo']['added']:,.0f} tok/line" + (f", ${r['cost']:.4f}" if r["harness"] == "oh-my-humanize" else ""))
+                  f"{r['repo']['commits']} commits, {r['repo']['added']} lines, {tokens/(r['repo']['commits'] or 1):,.0f} tok/commit, "
+                  f"{tokens/(r['repo']['added'] or 1):,.0f} tok/line" + (f", ${r['cost']:.4f}" if r["harness"] == "oh-my-humanize" else ""))
     (OUT / "summary.md").write_text("\n".join(md) + "\n")
 
 def build_metrics_csv(reports):
