@@ -16,7 +16,7 @@ TARGETS=(
   oh-my-humanize-qwen38:omh:openrouter/qwen/qwen3.8-27b
   oh-my-humanize-kimi-k3:omh:openrouter/moonshotai/kimi-k3
   oh-my-humanize-qwen-max:omh:openrouter/qwen/qwen3.8-max
-  oh-my-humanize-ox-alpha:omh:openrouter/stealth/ox-alpha
+  oh-my-humanize-ox-alpha:omh:openrouter/z-ai/glm-5.3-flash
   oh-my-humanize-glm-53:omh:openrouter/z-ai/glm-5.3
   oh-my-humanize-codex:omh:openrouter/openai/gpt-5.5
 )
