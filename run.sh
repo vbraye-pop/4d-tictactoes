@@ -1,36 +1,44 @@
 #!/usr/bin/env bash
 # run.sh: sanity-check an agent directory, launch the harness with the task
 # prompt, and record duration/tokens/cost into stats.csv when it exits.
+#
+# Targets are rows in the TARGETS table below. New harness/model combos go there too.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CSV="$ROOT/stats.csv"
 PROMPT='Read TASK.md and start planning and executing the task.'
 
-MODEL_QWEN="openrouter/qwen/qwen3.8-27b"
-MODEL_KIMI="openrouter/moonshotai/kimi-k3"
+# Target table: DIR:HARNESS:MODEL. Add new combos here.
+TARGETS=(
+  claude-code-opus5:claude:opus
+  claude-code-sonnet:claude:sonnet
+  oh-my-humanize-qwen38:omh:openrouter/qwen/qwen3.8-27b
+  oh-my-humanize-kimi-k3:omh:openrouter/moonshotai/kimi-k3
+  oh-my-humanize-qwen-max:omh:openrouter/qwen/qwen3.8-max
+  oh-my-humanize-ox-alpha:omh:openrouter/stealth/ox-alpha
+  oh-my-humanize-glm-53:omh:openrouter/z-ai/glm-5.3
+  oh-my-humanize-codex:omh:openrouter/openai/gpt-5.5
+)
 
 usage() {
-  cat <<EOF
-Usage: run.sh <target> [--reset] [--dry-run]
-
-Targets (any string containing the name matches):
-  opus    Claude Code, model opus                  in claude-code-opus5/
-  qwen    omh, $MODEL_QWEN
-                                                              in oh-my-humanize-qwen38/
-  kimi    omh, $MODEL_KIMI
-                                                              in oh-my-humanize-kimi-k3/
-
-Options:
-  --reset     restore the agent dir to its baseline commit before the run
-              (tracked files reset, untracked files removed except TASK.md)
-  --dry-run   run the sanity checks and print the launch command, start nothing
-  -h, --help  show this help
-
-On harness exit (normal or Ctrl-C) the script records the run in stats.csv:
-start_utc, end_utc, duration_s, tokens_in, tokens_out, tokens_cached, and
-cost_usd for the OpenRouter runs. result and notes stay yours to fill.
-EOF
+  echo "Usage: run.sh <target> [--reset] [--dry-run] [--new]"
+  echo
+  echo "Targets:"
+  for t in "${TARGETS[@]}"; do
+    IFS=':' read -r dir harness model <<< "$t"
+    printf "  %-24s %s, %s\n" "$dir" "$harness" "$model"
+  done
+  echo
+  echo "Options:"
+  echo "  --new       create the agent dir (git init + baseline + TASK.md) and add a row to stats.csv"
+  echo "  --reset     restore the agent dir to its baseline commit before the run"
+  echo "  --dry-run   run the sanity checks and print the launch command, start nothing"
+  echo "  -h, --help  show this help"
+  echo
+  echo "On harness exit (normal or Ctrl-C) the script records the run in stats.csv:"
+  echo "start_utc, end_utc, duration_s, tokens_in, tokens_out, tokens_cached, and"
+  echo "cost_usd for the OpenRouter runs. result and notes stay yours to fill."
 }
 
 die() { echo "run.sh: $*" >&2; exit 1; }
@@ -38,10 +46,12 @@ die() { echo "run.sh: $*" >&2; exit 1; }
 TARGET=""
 RESET=0
 DRY_RUN=0
+NEW=0
 for arg in "$@"; do
   case "$arg" in
     --reset) RESET=1 ;;
     --dry-run) DRY_RUN=1 ;;
+    --new) NEW=1 ;;
     -h|--help) usage; exit 0 ;;
     *) [ -z "$TARGET" ] || die "unexpected argument: $arg"
        TARGET="$arg" ;;
@@ -49,16 +59,53 @@ for arg in "$@"; do
 done
 [ -n "$TARGET" ] || { usage; exit 1; }
 
-T="$(printf '%s' "$TARGET" | tr '[:upper:]' '[:lower:]')"
-case "$T" in
-  opus|claude*|*opus*)
-    DIR="claude-code-opus5"; HARNESS="claude"; MODEL="opus" ;;
-  qwen*|*qwen*)
-    DIR="oh-my-humanize-qwen38"; HARNESS="omh"; MODEL="$MODEL_QWEN" ;;
-  kimi*|*kimi*)
-    DIR="oh-my-humanize-kimi-k3"; HARNESS="omh"; MODEL="$MODEL_KIMI" ;;
-  *) usage; echo; die "unknown target: $TARGET" ;;
-esac
+# ---- resolve target ---------------------------------------------------------
+
+resolve_target() {
+  local t
+  t="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
+  for e in "${TARGETS[@]}"; do
+    IFS=':' read -r dir harness model <<< "$e"
+    local short
+    short="${dir#oh-my-humanize-}"
+    short="${short#claude-code-}"
+    if [ "$t" = "$short" ] || [ "$t" = "$dir" ] || [[ "$t" == *"$short"* ]] || [[ "$t" == *"$model"* ]]; then
+      echo "$dir" "$harness" "$model"
+      return 0
+    fi
+  done
+  return 1
+}
+
+RESOLVED=""
+RESOLVED="$(resolve_target "$TARGET")" || true
+if [ -z "$RESOLVED" ]; then
+  echo "run.sh: unknown target: $TARGET"
+  echo
+  usage
+  exit 1
+fi
+read -r DIR HARNESS MODEL <<< "$RESOLVED"
+
+# ---- --new: create the agent dir ---------------------------------------------
+
+if [ "$NEW" -eq 1 ]; then
+  if [ -d "$ROOT/$DIR" ] && [ -f "$ROOT/$DIR/.git/HEAD" ]; then
+    die "$DIR already exists"
+  fi
+  mkdir -p "$ROOT/$DIR"
+  cd "$ROOT/$DIR"
+  git init -b main
+  git config user.name "vbraye-pop"
+  git config user.email "valerien.braye@proseonpixels.com"
+  cp "$ROOT/TASK.md" .
+  git add TASK.md
+  git commit -m "chore: baseline"
+  git config core.autocrlf input
+  grep -q "^$DIR," "$CSV" || echo "$DIR,$HARNESS,$MODEL,$( [ "$HARNESS" = "claude" ] && echo "anthropic,flat-monthly" || echo "openrouter,per-token" ),,,,,,,," >> "$CSV"
+  echo "created $DIR (baseline $(git rev-parse HEAD))"
+  exit 0
+fi
 
 # ---- sanity checks ----------------------------------------------------------
 

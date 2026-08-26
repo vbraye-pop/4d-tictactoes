@@ -1,4 +1,5 @@
 run,harness,model,provider,billing,start_utc,end_utc,duration_s,tokens_in,tokens_out,tokens_cached,cost_usd,result,notes
-claude-code-opus5,claude-code,claude-opus-5,anthropic,flat-monthly,,,,,,,,
-oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,openrouter,per-token,,,,,,,,
-oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,openrouter,per-token,,,,,,,,
+claude-code-opus5,claude-code,claude-opus-5,anthropic,flat-monthly,2026-08-26T07:54:37Z,2026-08-26T08:49:59Z,3322,221730,147838,15062878,,
+oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,openrouter,per-token,2026-08-26T15:57:13Z,2026-08-26T16:27:48Z,1835,89226,34379,3730176,1.8073,
+oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,openrouter,per-token,2026-08-26T10:42:35Z,2026-08-26T13:48:15Z,11140,1359308,298744,37919440,4.3427,
+oh-my-humanize-qwen-max,omh,openrouter/qwen/qwen3.8-max,openrouter,per-token,,,,,,,,
