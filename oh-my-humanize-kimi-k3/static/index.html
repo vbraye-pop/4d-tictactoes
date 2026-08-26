@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4D Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">✕O</span>
+      <span class="brand-name">4D Tic-Tac-Toe</span>
+    </div>
+    <div class="controls">
+      <div class="segment" id="mode-select" role="group" aria-label="Game mode">
+        <button class="seg-btn active" data-mode="ai">Human vs AI</button>
+        <button class="seg-btn" data-mode="human">Human vs Human</button>
+      </div>
+      <select id="side-select" class="side-select" aria-label="Play as">
+        <option value="X">Play as X</option>
+        <option value="O">Play as O</option>
+      </select>
+      <button id="new-game" class="btn-primary">New game</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="board-panel">
+      <div id="status-bar" class="status-bar">
+        <span id="status-text" class="status-text"></span>
+        <span id="cursor-readout" class="cursor-readout"></span>
+      </div>
+      <div id="board" class="board" aria-label="3x3x3x3 board"></div>
+      <p class="legend">
+        <span class="legend-chip chip-x">X</span> moves first.
+        Win by building a full cross: two crossing lines through one center.
+        Crosses may run in any of the 40 four-dimensional directions.
+      </p>
+    </section>
+    <aside class="info-panel">
+      <h2>Game <span class="info-sub">0–4 players, 81 cells, 1548 winning crosses</span></h2>
+      <div id="move-log" class="move-log"></div>
+    </aside>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

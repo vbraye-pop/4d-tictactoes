@@ -3,3 +3,7 @@ claude-code-opus5,claude-code,claude-opus-5,anthropic,flat-monthly,2026-08-26T07
 oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,openrouter,per-token,2026-08-26T15:57:13Z,2026-08-26T16:27:48Z,1835,89226,34379,3730176,1.8073,
 oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,openrouter,per-token,2026-08-26T10:42:35Z,2026-08-26T13:48:15Z,11140,1359308,298744,37919440,4.3427,
 oh-my-humanize-qwen-max,omh,openrouter/qwen/qwen3.8-max,openrouter,per-token,,,,,,,,
+oh-my-humanize-ox-alpha,omh,openrouter/stealth/ox-alpha,openrouter,per-token,2026-08-26T16:51:15Z,2026-08-26T16:52:45Z,90,0,0,0,0.0000,
+oh-my-humanize-glm-53,omh,openrouter/z-ai/glm-5.3,openrouter,per-token,,,,,,,,
+claude-code-sonnet,claude,sonnet,anthropic,flat-monthly,,,,,,,,
+oh-my-humanize-codex,omh,openrouter/openai/gpt-5.5,openrouter,per-token,,,,,,,,
