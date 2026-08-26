@@ -221,5 +221,6 @@ cd "$ROOT/$DIR"
 if [ "$HARNESS" = "claude" ]; then
   claude --model "$MODEL" "$PROMPT"
 else
+  export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
 fi
