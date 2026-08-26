@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4D Tic-Tac-Toe</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>#</text></svg>">
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">4D</span>
+      <div>
+        <h1>Tic-Tac-Toe</h1>
+        <p class="brand-sub">3 &times; 3 &times; 3 &times; 3 &mdash; 81 cells, 1548 winning crosses</p>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="control-group" role="group" aria-label="Opponent">
+        <span class="control-label">Opponent</span>
+        <div class="segmented" id="mode-select">
+          <button type="button" data-mode="hvh" class="active">Two players</button>
+          <button type="button" data-mode="hva">Computer</button>
+        </div>
+      </div>
+      <div class="control-group" id="side-group" hidden>
+        <span class="control-label">You play</span>
+        <div class="segmented" id="side-select">
+          <button type="button" data-side="X" class="active">X</button>
+          <button type="button" data-side="O">O</button>
+        </div>
+      </div>
+      <button type="button" id="new-game" class="primary">New game</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="board-panel">
+      <div class="board-frame">
+        <div class="axis-legend">
+          <span class="axis-hint">Outer grid <b>x</b> &darr; <b>y</b> &rarr;</span>
+          <span class="axis-hint">Inner grid <b>z</b> &darr; <b>w</b> &rarr;</span>
+        </div>
+        <div class="board-wrap">
+          <div class="board" id="board"></div>
+          <svg class="cross-overlay" id="cross-overlay" aria-hidden="true"></svg>
+          <div class="board-veil" id="board-veil"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <div class="card status-card">
+        <div class="turn-row">
+          <span class="mark-chip" id="turn-mark">X</span>
+          <div>
+            <p class="turn-label" id="turn-label">X to move</p>
+            <p class="turn-note" id="turn-note">Click any cell to place a mark.</p>
+          </div>
+        </div>
+        <div class="progress-row">
+          <span id="move-count">Move 0</span>
+          <span id="empty-count">81 cells free</span>
+        </div>
+      </div>
+
+      <div class="card cursor-card">
+        <h2>Current position</h2>
+        <p class="cursor-sub" id="cursor-context">Board x1 y1 &mdash; showing all 81 cells</p>
+        <div class="coords" id="coords"></div>
+        <p class="hint">Arrow keys move inside a board, <kbd>Shift</kbd> + arrows switch board, <kbd>Enter</kbd> places a mark.</p>
+      </div>
+
+      <div class="card" id="result-card" hidden>
+        <h2 id="result-title">Result</h2>
+        <p id="result-body"></p>
+        <ul class="cross-list" id="cross-list"></ul>
+        <button type="button" class="primary wide" id="result-new">Play again</button>
+      </div>
+
+      <div class="card log-card">
+        <h2>Move log</h2>
+        <ol class="log" id="log"></ol>
+      </div>
+
+      <div class="card rules-card">
+        <h2>How to win</h2>
+        <p>Own all five cells of a <b>cross</b>: a centre cell plus two full
+        three-in-a-row lines through it, in any of the 40 directions of the 4D
+        grid. Diagonals count, and the lines may run through different
+        dimensions.</p>
+        <label class="toggle">
+          <input type="checkbox" id="threat-toggle">
+          <span>Mark cells that win immediately</span>
+        </label>
+      </div>
+    </aside>
+  </main>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

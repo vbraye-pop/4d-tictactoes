@@ -1,0 +1,8 @@
+TASK.md
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+node_modules/
+.venv/
+venv/

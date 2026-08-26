@@ -1,0 +1,4 @@
+# 4D tic-tac-toe needs no third-party packages.
+# The server, the game logic and the test suite all run on the Python 3.10+
+# standard library.  The file is kept so `pip install -r requirements.txt`
+# succeeds on a clean machine.
