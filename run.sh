@@ -365,13 +365,16 @@ elif [ "$HARNESS" = "opencode" ]; then
   opencode run --model "$MODEL" --agent build "$PROMPT This is a coding task. Do not just read the file. Plan, implement, test, and finish the entire task autonomously."
 elif [ "$HARNESS" = "aider" ]; then
   # aider is single-turn per message; loop until it stops making progress
-  PREV_COMMITS=0
+  PREV_STATE=""
   for i in $(seq 1 20); do
     aider --model "$MODEL" --yes-always --message "Read TASK.md and continue working on the task. If you have already started, pick up where you left off. Work autonomously until the task is fully complete."
+    # stop when aider produces nothing new (no file changes, no new commits)
+    CUR_STATE=$(git -C "$ROOT/$DIR" status --porcelain 2>/dev/null | sort | md5)
     CUR_COMMITS=$(git -C "$ROOT/$DIR" rev-list --count HEAD 2>/dev/null || echo 0)
-    if [ "$CUR_COMMITS" -le "$PREV_COMMITS" ]; then
+    if [ "$CUR_STATE" = "$PREV_STATE" ] && [ "$CUR_COMMITS" -le "${PREV_COMMITS:-0}" ]; then
       break
     fi
+    PREV_STATE=$CUR_STATE
     PREV_COMMITS=$CUR_COMMITS
   done
   # clean aider's tracking files so the dir passes pristine check on rerun
