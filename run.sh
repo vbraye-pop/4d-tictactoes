@@ -374,6 +374,9 @@ elif [ "$HARNESS" = "aider" ]; then
     fi
     PREV_COMMITS=$CUR_COMMITS
   done
+  # clean aider's tracking files so the dir passes pristine check on rerun
+  rm -f "$ROOT/$DIR/.aider.chat.history.md" "$ROOT/$DIR/.aider.input.history"
+  rm -rf "$ROOT/$DIR/.aider.tags.cache.v4"
 else
   export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
