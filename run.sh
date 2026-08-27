@@ -362,7 +362,24 @@ cd "$ROOT/$DIR"
 if [ "$HARNESS" = "claude" ]; then
   claude --model "$MODEL" "$PROMPT"
 elif [ "$HARNESS" = "opencode" ]; then
-  opencode run --model "$MODEL" --agent build "$PROMPT This is a coding task. Do not just read the file. Plan, implement, test, and finish the entire task autonomously."
+  # opencode run is single-turn; loop until state stops changing
+  PREV_STATE=""
+  EMPTY_PASSES=0
+  for i in $(seq 1 20); do
+    opencode run --model "$MODEL" --agent build "Read TASK.md and continue working on the task. If you have already started, pick up where you left off. Work autonomously until the task is fully complete."
+    CUR_STATE=$(git -C "$ROOT/$DIR" status --porcelain 2>/dev/null | sort | md5)
+    CUR_COMMITS=$(git -C "$ROOT/$DIR" rev-list --count HEAD 2>/dev/null || echo 0)
+    if [ "$CUR_STATE" = "$PREV_STATE" ] && [ "$CUR_COMMITS" -le "${PREV_COMMITS:-0}" ]; then
+      EMPTY_PASSES=$((EMPTY_PASSES + 1))
+      if [ "$EMPTY_PASSES" -ge 3 ]; then
+        break
+      fi
+    else
+      EMPTY_PASSES=0
+    fi
+    PREV_STATE=$CUR_STATE
+    PREV_COMMITS=$CUR_COMMITS
+  done
 elif [ "$HARNESS" = "aider" ]; then
   # aider is single-turn per message; loop until it stops making progress
   PREV_STATE=""
