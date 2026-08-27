@@ -348,9 +348,9 @@ cd "$ROOT/$DIR"
 if [ "$HARNESS" = "claude" ]; then
   claude --model "$MODEL" "$PROMPT"
 elif [ "$HARNESS" = "opencode" ]; then
-  opencode run --model "$MODEL" "$PROMPT"
+  opencode run --model "$MODEL" --agent build "$PROMPT Work autonomously until the task is fully complete."
 elif [ "$HARNESS" = "aider" ]; then
-  aider --model "$MODEL" --yes-always --message "$PROMPT"
+  aider --model "$MODEL" --yes-always --message "$PROMPT Work autonomously until the task is fully complete."
 else
   export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
