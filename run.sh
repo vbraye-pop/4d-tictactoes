@@ -157,9 +157,19 @@ if [ "$HEAD" != "$BASELINE" ]; then
   die "$DIR is not at its baseline (HEAD $HEAD, baseline $BASELINE). Pass --reset to restore."
 fi
 if [ "$STATUS" != "?? TASK.md" ] && [ -n "$STATUS" ]; then
-  die "$DIR working tree is not pristine:
+  if [ "$HARNESS" = "aider" ]; then
+    # aider writes its own dotfiles; allow those, reject anything else
+    BAD="$(echo "$STATUS" | grep -vE '^\?\? \.aider' || true)"
+    if [ -n "$BAD" ]; then
+      die "$DIR working tree is not pristine:
+$BAD
+Pass --reset to restore the baseline."
+    fi
+  else
+    die "$DIR working tree is not pristine:
 $STATUS
 Pass --reset to restore the baseline."
+  fi
 fi
 
 if [ "$DRY_RUN" -eq 1 ]; then
@@ -348,9 +358,9 @@ cd "$ROOT/$DIR"
 if [ "$HARNESS" = "claude" ]; then
   claude --model "$MODEL" "$PROMPT"
 elif [ "$HARNESS" = "opencode" ]; then
-  opencode run --model "$MODEL" --agent build "$PROMPT Work autonomously until the task is fully complete."
+  opencode run --model "$MODEL" --agent build "$PROMPT This is a coding task. Do not just read the file. Plan, implement, test, and finish the entire task autonomously."
 elif [ "$HARNESS" = "aider" ]; then
-  aider --model "$MODEL" --yes-always --message "$PROMPT Work autonomously until the task is fully complete."
+  aider --model "$MODEL" --yes-always --message "$PROMPT This is a coding task. Do not just read the file. Plan, implement, test, and finish the entire task autonomously."
 else
   export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
