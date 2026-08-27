@@ -34,6 +34,10 @@ TARGETS=(
   aider-glm-53:aider:openrouter/z-ai/glm-5.3
   aider-codex:aider:openrouter/openai/gpt-5.5
   oh-my-humanize-sonnet:omh:openrouter/anthropic/claude-sonnet-5
+  oh-my-humanize-opus:omh:openrouter/anthropic/claude-opus-5
+  oh-my-humanize-fable:omh:openrouter/anthropic/claude-fable-5
+  opencode-fable:opencode:openrouter/anthropic/claude-fable-5
+  aider-fable:aider:openrouter/anthropic/claude-fable-5
 )
 
 usage() {
