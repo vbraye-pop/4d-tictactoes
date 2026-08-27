@@ -4,9 +4,9 @@ oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,openrouter,per-token,2026-08-26T13
 oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,openrouter,per-token,2026-08-26T10:42:35Z,2026-08-26T13:48:15Z,11140,1359308,298744,37919440,4.3427,
 oh-my-humanize-qwen-max,oh-my-humanize,openrouter/qwen/qwen3.8-max,openrouter,per-token,2026-08-27T05:02:07Z,2026-08-27T08:46:32Z,13465,2682280,238505,30141440,14.3309,
 oh-my-humanize-ox-alpha,omh,openrouter/stealth/ox-alpha,openrouter,per-token,2026-08-26T15:18:08Z,2026-08-26T16:56:23Z,5895,367789,121803,23338432,0.4081,
-oh-my-humanize-glm-53,omh,openrouter/z-ai/glm-5.3,openrouter,per-token,,,,,,,,
-claude-code-sonnet,claude,sonnet,anthropic,flat-monthly,,,,,,,,
-oh-my-humanize-codex,omh,openrouter/openai/gpt-5.5,openrouter,per-token,,,,,,,,
+oh-my-humanize-glm-53,omh,openrouter/z-ai/glm-5.3,openrouter,per-token,2026-08-27T06:52:21Z,2026-08-27T08:47:22Z,6901,226885,160646,23455360,7.1229,,killed mid-run by user
+claude-code-sonnet,claude,sonnet,anthropic,flat-monthly,2026-08-27T09:25:21Z,2026-08-27T10:55:57Z,5436,262680,136794,23081346,,
+oh-my-humanize-codex,omh,openrouter/openai/gpt-5.5,openrouter,per-token,2026-08-27T09:25:50Z,2026-08-27T09:28:59Z,189,53015,15055,422400,0.9279,
 opencode-qwen,opencode,openrouter/qwen/qwen3.8-27b,openrouter,per-token,,,,,,,,
 opencode-kimi,opencode,openrouter/moonshotai/kimi-k3,openrouter,per-token,,,,,,,,
 aider-qwen,aider,openrouter/qwen/qwen3.8-27b,openrouter,per-token,,,,,,,,
