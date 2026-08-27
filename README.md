@@ -10,19 +10,23 @@ Each subdirectory is an independent git repository, starting from an identical b
 
 ## Test matrix
 
+Legend: done = x, running = ~, planned = o
+
 |  | claude-code | omh | opencode | aider |
 |---|---|---|---|---|
-| **Opus 5** | x | x | x | x |
-| **Sonnet 5** | x | x | x | x |
-| **Fable 5** |  | x | x | x |
-| **Qwen 3.8-27B** |  | x | x | x |
-| **Qwen 3.8 Max** |  | x |  |  |
-| **Kimi K3** |  | x | x | x |
-| **GLM-5.3** |  | x | x | x |
+| **Opus 5** | x | o | ~ | o |
+| **Sonnet 5** | x | x | o | o |
+| **Fable 5** |  | o | o | o |
+| **Qwen 3.8-27B** |  | x | ~ | ~ |
+| **Qwen 3.8 Max** |  | x | o | o |
+| **Kimi K3** |  | x | o | o |
+| **GLM-5.3** |  | x | o | o |
 | **GLM-5.3-flash** |  | x |  |  |
-| **GPT-5.5** |  | x | x | x |
+| **GPT-5.5** |  | o | o | o |
 
-27 combinations. Completed runs are marked in `stats.csv`.
+Completed: opus@claude-code, sonnet@claude-code, sonnet@omh, qwen38@omh, qwen-max@omh, kimi-k3@omh, glm-5.3@omh, glm-5.3-flash@omh.
+Running now: opus@opencode, qwen27b@opencode, qwen27b@aider.
+Killed before completion: gpt-5.5@omh (189s, partial data in stats.csv).
 
 Per agent: `git -C <dir> diff 1e40f677` shows the work, `git -C <dir> log --oneline` shows the history.
 
