@@ -24,6 +24,16 @@ TARGETS=(
   opencode-opus:opencode:openrouter/anthropic/claude-opus-5
   aider-qwen:aider:openrouter/qwen/qwen3.8-27b
   aider-kimi:aider:openrouter/moonshotai/kimi-k3
+  opencode-sonnet:opencode:openrouter/anthropic/claude-sonnet-5
+  opencode-qwen-max:opencode:openrouter/qwen/qwen3.8-max
+  opencode-glm-53:opencode:openrouter/z-ai/glm-5.3
+  opencode-codex:opencode:openrouter/openai/gpt-5.5
+  aider-opus:aider:openrouter/anthropic/claude-opus-5
+  aider-sonnet:aider:openrouter/anthropic/claude-sonnet-5
+  aider-qwen-max:aider:openrouter/qwen/qwen3.8-max
+  aider-glm-53:aider:openrouter/z-ai/glm-5.3
+  aider-codex:aider:openrouter/openai/gpt-5.5
+  oh-my-humanize-sonnet:omh:openrouter/anthropic/claude-sonnet-5
 )
 
 usage() {
