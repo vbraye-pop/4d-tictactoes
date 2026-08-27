@@ -19,6 +19,11 @@ TARGETS=(
   oh-my-humanize-ox-alpha:omh:openrouter/z-ai/glm-5.3-flash
   oh-my-humanize-glm-53:omh:openrouter/z-ai/glm-5.3
   oh-my-humanize-codex:omh:openrouter/openai/gpt-5.5
+  opencode-qwen:opencode:openrouter/qwen/qwen3.8-27b
+  opencode-kimi:opencode:openrouter/moonshotai/kimi-k3
+  opencode-opus:opencode:openrouter/anthropic/claude-opus-5
+  aider-qwen:aider:openrouter/qwen/qwen3.8-27b
+  aider-kimi:aider:openrouter/moonshotai/kimi-k3
 )
 
 usage() {
@@ -64,12 +69,23 @@ done
 resolve_target() {
   local t
   t="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
+  # exact dir match first
+  for e in "${TARGETS[@]}"; do
+    IFS=':' read -r dir harness model <<< "$e"
+    if [ "$t" = "$dir" ]; then
+      echo "$dir" "$harness" "$model"
+      return 0
+    fi
+  done
+  # then short name or substring
   for e in "${TARGETS[@]}"; do
     IFS=':' read -r dir harness model <<< "$e"
     local short
     short="${dir#oh-my-humanize-}"
     short="${short#claude-code-}"
-    if [ "$t" = "$short" ] || [ "$t" = "$dir" ] || [[ "$t" == *"$short"* ]] || [[ "$t" == *"$model"* ]]; then
+    short="${short#opencode-}"
+    short="${short#aider-}"
+    if [ "$t" = "$short" ] || [[ "$t" == *"$short"* ]] || [[ "$t" == *"$model"* ]]; then
       echo "$dir" "$harness" "$model"
       return 0
     fi
@@ -267,6 +283,10 @@ echo "stats are recorded when the harness exits"
 cd "$ROOT/$DIR"
 if [ "$HARNESS" = "claude" ]; then
   claude --model "$MODEL" "$PROMPT"
+elif [ "$HARNESS" = "opencode" ]; then
+  opencode run --model "$MODEL" "$PROMPT"
+elif [ "$HARNESS" = "aider" ]; then
+  aider --model "$MODEL" --yes-always --message "$PROMPT"
 else
   export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
