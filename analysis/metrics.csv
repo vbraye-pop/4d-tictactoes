@@ -1,4 +1,6 @@
 run,harness,model,duration_s,api_calls,tokens_in,tokens_out,tokens_cached,cache_ratio,tool_calls,tool_err_pct,tool_avg_ms,cost_usd,commits,files_changed,loc_added,tokens_per_commit,tokens_per_line
 claude-code-opus5,claude-code,claude-opus-5,3322,102,221730,147838,15062878,0.9855,31,0.00,0,,0,0,0,,
-oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,1835,85,89226,34379,3730176,0.9766,84,10.71,147,1.8073,0,0,0,,
-oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,11140,470,14508063,589848,58006080,0.7999,486,7.20,191,13.7808,0,0,0,,
+oh-my-humanize-kimi-k3,oh-my-humanize,kimi-k3,1841,645,4498603,693431,95129488,0.9548,709,7.76,510,20.8890,0,0,0,,
+oh-my-humanize-qwen38,oh-my-humanize,qwen3.8,11140,843,17558132,950156,111485952,0.8639,910,8.02,438,28.5198,0,0,0,,
+oh-my-humanize-qwen-max,oh-my-humanize,openrouter/qwen/qwen3.8-max,13465,169,2682280,238505,30141440,0.9183,197,7.61,604,14.3309,0,0,0,,
+oh-my-humanize-ox-alpha,omh,openrouter/stealth/ox-alpha,5895,645,4498603,693431,95129488,0.9548,709,7.76,510,,0,0,0,,
