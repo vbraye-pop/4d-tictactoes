@@ -17,7 +17,7 @@ Legend: done = x, planned = o
 | **Opus 5** | x | o | o | o |
 | **Sonnet 5** | x | x | o | o |
 | **Fable 5** |  | o | o | o |
-| **Qwen 3.8-27B** |  | x | o | o |
+| **Qwen 3.8-27B** |  | x | x | o |
 | **Qwen 3.8 Max** |  | x | o | o |
 | **Kimi K3** |  | x | o | o |
 | **GLM-5.3** |  | x | o | o |
