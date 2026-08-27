@@ -162,8 +162,8 @@ if [ "$HEAD" != "$BASELINE" ]; then
 fi
 if [ "$STATUS" != "?? TASK.md" ] && [ -n "$STATUS" ]; then
   if [ "$HARNESS" = "aider" ]; then
-    # aider writes its own dotfiles; allow those, reject anything else
-    BAD="$(echo "$STATUS" | grep -vE '^\?\? \.aider' || true)"
+    # aider writes .gitignore and dotfiles; allow those, reject anything else
+    BAD="$(echo "$STATUS" | grep -vE '^\?\? (\.aider|\.gitignore)' || true)"
     if [ -n "$BAD" ]; then
       die "$DIR working tree is not pristine:
 $BAD
