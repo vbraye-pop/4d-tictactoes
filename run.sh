@@ -366,13 +366,19 @@ elif [ "$HARNESS" = "opencode" ]; then
 elif [ "$HARNESS" = "aider" ]; then
   # aider is single-turn per message; loop until it stops making progress
   PREV_STATE=""
+  EMPTY_PASSES=0
   for i in $(seq 1 20); do
-    aider --model "$MODEL" --yes-always --architect --auto-accept-architect --edit-format whole --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete."
-    # stop when aider produces nothing new (no file changes, no new commits)
+    timeout 600 aider --model "$MODEL" --yes-always --architect --auto-accept-architect --edit-format whole --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete." || true
+    # stop only after 3 consecutive passes with no new state
     CUR_STATE=$(git -C "$ROOT/$DIR" status --porcelain 2>/dev/null | sort | md5)
     CUR_COMMITS=$(git -C "$ROOT/$DIR" rev-list --count HEAD 2>/dev/null || echo 0)
     if [ "$CUR_STATE" = "$PREV_STATE" ] && [ "$CUR_COMMITS" -le "${PREV_COMMITS:-0}" ]; then
-      break
+      EMPTY_PASSES=$((EMPTY_PASSES + 1))
+      if [ "$EMPTY_PASSES" -ge 3 ]; then
+        break
+      fi
+    else
+      EMPTY_PASSES=0
     fi
     PREV_STATE=$CUR_STATE
     PREV_COMMITS=$CUR_COMMITS
