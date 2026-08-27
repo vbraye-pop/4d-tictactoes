@@ -202,36 +202,32 @@ start_utc = state["start_utc"]
 duration = end_epoch - start_epoch
 
 cutoff = start_epoch - 15
-if harness == "claude":
-    bases = glob.glob(os.path.expanduser(os.path.join("~", ".claude", "projects", "*" + d + "*")))
-else:
-    bases = [os.path.expanduser(os.path.join("~", ".omp", "agent", "sessions"))]
-
-files = []
-for base in bases:
-    for f in glob.glob(os.path.join(base, "**", "*.jsonl"), recursive=True):
-        st = os.stat(f)
-        born = getattr(st, "st_birthtime", st.st_mtime)
-        if born >= cutoff:
-            files.append(f)
-
 tin = tout = tcached = 0
 cost = 0.0
-for f in files:
-    seen = set()
-    for line in open(f, errors="ignore"):
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            rec = json.loads(line)
-        except Exception:
-            continue
-        msg = rec.get("message")
-        if not isinstance(msg, dict) or not isinstance(msg.get("usage"), dict):
-            continue
-        u = msg["usage"]
-        if harness == "claude":
+found_data = False
+
+if harness == "claude":
+    bases = glob.glob(os.path.expanduser(os.path.join("~", ".claude", "projects", "*" + d + "*")))
+    files = []
+    for base in bases:
+        for f in glob.glob(os.path.join(base, "**", "*.jsonl"), recursive=True):
+            st = os.stat(f)
+            if getattr(st, "st_birthtime", st.st_mtime) >= cutoff:
+                files.append(f)
+    for f in files:
+        seen = set()
+        for line in open(f, errors="ignore"):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except Exception:
+                continue
+            msg = rec.get("message")
+            if not isinstance(msg, dict) or not isinstance(msg.get("usage"), dict):
+                continue
+            u = msg["usage"]
             mid = msg.get("id")
             if mid in seen:
                 continue
@@ -239,7 +235,30 @@ for f in files:
             tin += u.get("input_tokens", 0) + u.get("cache_creation_input_tokens", 0)
             tout += u.get("output_tokens", 0)
             tcached += u.get("cache_read_input_tokens", 0)
-        else:
+    found_data = bool(files)
+
+elif harness == "omh":
+    base = os.path.expanduser(os.path.join("~", ".omp", "agent", "sessions"))
+    slug = "-research-ai-agent-4d-tictactoe-" + d
+    files = []
+    for f in glob.glob(os.path.join(base, slug, "*.jsonl")):
+        st = os.stat(f)
+        if getattr(st, "st_birthtime", st.st_mtime) >= cutoff:
+            files.append(f)
+    for f in files:
+        seen = set()
+        for line in open(f, errors="ignore"):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except Exception:
+                continue
+            msg = rec.get("message")
+            if not isinstance(msg, dict) or not isinstance(msg.get("usage"), dict):
+                continue
+            u = msg["usage"]
             rid = rec.get("id")
             if rid in seen:
                 continue
@@ -248,9 +267,42 @@ for f in files:
             tout += u.get("output", 0)
             tcached += u.get("cacheRead", 0)
             cost += (u.get("cost") or {}).get("total", 0)
+    found_data = bool(files)
 
-if not files:
-    print(f"warning: no session transcripts created in the run window, stats.csv left untouched")
+elif harness == "opencode":
+    import sqlite3
+    db_path = os.path.expanduser(os.path.join("~", ".local", "share", "opencode", "opencode.db"))
+    if os.path.exists(db_path):
+        conn = sqlite3.connect(db_path)
+        # find sessions for this project dir created after cutoff
+        rows_db = conn.execute(
+            "SELECT data FROM message WHERE time_created > ? ORDER BY time_created",
+            (int(cutoff * 1000),)).fetchall()
+        for (data_str,) in rows_db:
+            try:
+                data = json.loads(data_str)
+            except Exception:
+                continue
+            path = data.get("path", {})
+            cwd = path.get("cwd", "")
+            if d not in cwd:
+                continue
+            tokens = data.get("tokens", {})
+            cache = tokens.get("cache", {})
+            tin += tokens.get("input", 0) + cache.get("write", 0)
+            tout += tokens.get("output", 0)
+            tcached += cache.get("read", 0)
+            cost += data.get("cost", 0) or 0
+            found_data = True
+        conn.close()
+
+elif harness == "aider":
+    # aider has no structured per-message token store; duration only
+    hist = os.path.join(root, d, ".aider.chat.history.md")
+    found_data = os.path.exists(hist)
+
+if not found_data:
+    print(f"warning: no session data found for {d}, stats.csv left untouched")
     print(f"duration {duration}s ({start_utc} -> {end_utc})")
     sys.exit(0)
 
@@ -265,7 +317,7 @@ for row in rows[1:]:
         row[idx["tokens_in"]] = str(tin)
         row[idx["tokens_out"]] = str(tout)
         row[idx["tokens_cached"]] = str(tcached)
-        if harness == "omh":
+        if harness in ("omh", "opencode"):
             row[idx["cost_usd"]] = f"{cost:.4f}"
         found = True
         break
@@ -275,8 +327,10 @@ if found:
 
 print(f"duration:   {duration}s ({start_utc} -> {end_utc})")
 print(f"tokens:     in={tin} out={tout} cached={tcached}")
-if harness == "omh":
+if harness in ("omh", "opencode"):
     print(f"cost:       ${cost:.4f}")
+elif harness == "aider":
+    print(f"cost:       n/a (aider does not expose per-message cost)")
 else:
     print(f"cost:       n/a (flat monthly subscription)")
 print(f"csv updated: {os.path.relpath(csv_path, root)}")
