@@ -364,7 +364,16 @@ if [ "$HARNESS" = "claude" ]; then
 elif [ "$HARNESS" = "opencode" ]; then
   opencode run --model "$MODEL" --agent build "$PROMPT This is a coding task. Do not just read the file. Plan, implement, test, and finish the entire task autonomously."
 elif [ "$HARNESS" = "aider" ]; then
-  aider --model "$MODEL" --yes-always --message "$PROMPT This is a coding task. Do not just read the file. Plan, implement, test, and finish the entire task autonomously."
+  # aider is single-turn per message; loop until it stops making progress
+  PREV_COMMITS=0
+  for i in $(seq 1 20); do
+    aider --model "$MODEL" --yes-always --message "Read TASK.md and continue working on the task. If you have already started, pick up where you left off. Work autonomously until the task is fully complete."
+    CUR_COMMITS=$(git -C "$ROOT/$DIR" rev-list --count HEAD 2>/dev/null || echo 0)
+    if [ "$CUR_COMMITS" -le "$PREV_COMMITS" ]; then
+      break
+    fi
+    PREV_COMMITS=$CUR_COMMITS
+  done
 else
   export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
