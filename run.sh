@@ -390,7 +390,7 @@ elif [ "$HARNESS" = "aider" ]; then
     if [[ "$MODEL" == *"kimi"* ]]; then
       EXTRA="--thinking-tokens 16384"
     fi
-    aider --model "$MODEL" --yes-always --architect --auto-accept-architect --edit-format whole $EXTRA --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete." || true
+    aider --model "$MODEL" --yes-always --no-show-model-warnings --architect --auto-accept-architect --edit-format whole $EXTRA --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete." || true
     # stop only after 3 consecutive passes with no new state
     CUR_STATE=$(git -C "$ROOT/$DIR" status --porcelain 2>/dev/null | sort | md5)
     CUR_COMMITS=$(git -C "$ROOT/$DIR" rev-list --count HEAD 2>/dev/null || echo 0)
