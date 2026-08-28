@@ -387,7 +387,8 @@ elif [ "$HARNESS" = "aider" ]; then
   for i in $(seq 1 20); do
     # kimi-k3 is a thinking model; needs a high thinking budget to produce content
     EXTRA=""
-    if [[ "$MODEL" == *"kimi"* ]]; then
+    # thinking models need a high reasoning budget to produce content
+    if [[ "$MODEL" == *"kimi"* ]] || [[ "$MODEL" == *"opus"* ]] || [[ "$MODEL" == *"fable"* ]]; then
       EXTRA="--thinking-tokens 16384"
     fi
     aider --model "$MODEL" --yes-always --no-show-model-warnings --architect --auto-accept-architect --edit-format whole $EXTRA --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete." || true
