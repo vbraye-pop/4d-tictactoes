@@ -1,12 +1,8 @@
 # 4D Tic-Tac-Toe agent comparison
 
-## Introduction
+27 harness/model combinations, one task each: build a complete browser-based 4D tic-tac-toe game on a 3x3x3x3 board, in Python, end to end. Same `TASK.md`, same baseline commit, same definition of done. We measure time, tokens, cost, tool usage, and behavior.
 
-AI coding agents are proliferating, and so are the models that power them. Every harness claims to be the best way to work with LLMs, and every model claims to be the best at coding. But nobody measures the combinations. A strong model in a weak harness produces garbage; a weak model in a strong harness can surprise you. The interaction matters.
-
-This repository contains a controlled experiment: 27 harness/model combinations, each given the identical task — build a complete browser-based 4D tic-tac-toe game on a 3×3×3×3 board, in Python, end to end — and measured on time, tokens, cost, tool usage, and behavior. The task is deliberately hard (4D geometry, exact endgame solving, a full web UI) so that differences in capability are visible.
-
-Each run is an independent git repository with an identical baseline commit and the same `TASK.md`. The agents work autonomously; we record everything they do.
+Each run is an independent git repository with an identical baseline. The agents work autonomously; we record everything they do.
 
 ## Test matrix
 
