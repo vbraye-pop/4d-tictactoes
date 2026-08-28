@@ -10,7 +10,7 @@ Legend: done = x, planned = o
 
 |  | claude-code | omh | opencode | aider |
 |---|---|---|---|---|
-| **Opus 5** | x | o | o | o |
+| **Opus 5** | x | o | o | ✗ |
 | **Sonnet 5** | x | x | o | o |
 | **Fable 5** |  | o | x | o |
 | **Qwen 3.8-27B** |  | x | x | x |
@@ -22,6 +22,7 @@ Legend: done = x, planned = o
 
 Completed: opus@claude-code, sonnet@claude-code, sonnet@omh, qwen38@omh, qwen-max@omh, kimi-k3@omh, glm-5.3@omh, glm-5.3-flash@omh, opencode-qwen, opencode-fable, aider-qwen.
 Killed before completion: gpt-5.5@omh (189s, partial data in stats.csv).
+Failed: opus@aider (model output incompatible with aider edit format).
 
 ## Launching a run
 
