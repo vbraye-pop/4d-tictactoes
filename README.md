@@ -42,7 +42,7 @@ Efficiency alone doesn't say whether a codebase is any good. A deliverable can b
 
 21 cells sit in the cost-aware efficiency group: omh, opencode, and 5 aider cells with recovered real cost, now including `opencode-opus`. `claude-code`'s two cells and `aider-qwen-max` are duration-only (marked with a dot) and not on the same scale, don't read those against the rest at face value. `aider-qwen` is excluded entirely: a cell only gets scored if it clears the definition-of-done gate, and a codebase that crashes on import doesn't.
 
-`PNG`/`PPTX` source: `analysis/score-grid.png`, `analysis/score-grid.pptx`.
+`analysis/score-grid.png` is the image above. `analysis/score-grid.pptx` is the same matrix as one real editable slide (native shapes and text boxes, not a picture), ready to drop into another deck.
 
 ## Code quality
 
@@ -50,7 +50,7 @@ Efficiency measures how cheaply a cell reached a verified deliverable, not wheth
 
 ![Code quality, 0-10, per harness x model cell](analysis/quality-grid.png)
 
-This one is quality on its own, no efficiency mixed in, on a fixed 0-10 scale rather than rescaled per column, so the color reflects the real spread rather than exaggerating small gaps. `aider-qwen` is included here (unlike the combined table below) since it did get reviewed, at 2.5, dashed border to mark that it's disqualified rather than just low. `PNG`/`PPTX` source: `analysis/quality-grid.png`, `analysis/quality-grid.pptx`.
+This one is quality on its own, no efficiency mixed in, on a fixed 0-10 scale rather than rescaled per column, so the color reflects the real spread rather than exaggerating small gaps. `aider-qwen` is included here (unlike the combined table below) since it did get reviewed, at 2.5, dashed border to mark that it's disqualified rather than just low. `analysis/quality-grid.png` is the image above. `analysis/quality-grid.pptx` is the same matrix as one real editable slide (native shapes and text boxes, not a picture), ready to drop into another deck.
 
 - **Correctness**: does win detection actually cover all 1548 crosses, does the AI's immediate-win/block/optimal-endgame logic hold up when read, not just when tested
 - **Architecture**: separation of concerns, naming, module structure, maintainability
