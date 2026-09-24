@@ -1,0 +1,28 @@
+run,harness,model,correctness,architecture,test_quality,completeness,quality_overall,efficiency_score,efficiency_type,combined_score,real_bugs_found
+claude-code-opus5,claude-code,claude-opus-5,9,9,9,9,9.0,70.5,duration-only,79.7,none
+claude-code-sonnet,claude-code,claude-sonnet-5,9,9,8,9,8.8,0.0,duration-only,0.0,none
+oh-my-humanize-opus,omh,claude-opus-5,10,9,10,10,9.8,29.5,cost-aware,53.8,none
+oh-my-humanize-sonnet,omh,claude-sonnet-5,9,9,10,9,9.3,31.8,cost-aware,54.4,none
+oh-my-humanize-fable,omh,claude-fable-5,9,9,6,9,8.3,0.0,cost-aware,0.0,"none (endgame solver effectively unreached/unverified in tests)"
+oh-my-humanize-qwen38,omh,qwen3.8-27b,7,9,6.5,9,7.9,27.9,cost-aware,46.9,"root exact-search loop can return cell -1 in a fully lost position with no immediate threat (dormant)"
+oh-my-humanize-qwen-max,omh,qwen3.8-max,6,8,8,9,7.8,15.3,cost-aware,34.5,"endgame solver threat-list dedup bug causes incorrect forced-loss classification (reachable; violates never-lose-with-draw-available)"
+oh-my-humanize-kimi-k3,omh,kimi-k3,7,9,4,7,6.8,67.0,cost-aware,67.5,"heuristic denial-value sign inversion in ordinary (non-forced) move scoring"
+oh-my-humanize-glm-53,omh,glm-5.3,9,9,9,8,8.8,33.0,cost-aware,53.9,none
+oh-my-humanize-ox-alpha,omh,glm-5.3-flash,8,9,9,8,8.5,58.6,cost-aware,70.6,"likely transposition-table bound-flag inversion (unconfirmed against passing oracle tests)"
+opencode-sonnet,opencode,claude-sonnet-5,9,9,8,9,8.8,58.3,cost-aware,71.6,"none (one mislabeled but harmless test name)"
+opencode-fable,opencode,claude-fable-5,9,9,9,9,9.0,30.4,cost-aware,52.3,none
+opencode-qwen,opencode,qwen3.8-27b,8,9,9,6,8.0,47.8,cost-aware,61.8,"latent TT-caching correctness bug (fail-high bound stored as exact); missing README.md and requirements.txt"
+opencode-qwen-max,opencode,qwen3.8-max-0902,9,9,9,9,9.0,37.5,cost-aware,58.1,none
+opencode-kimi,opencode,kimi-k3,9,9,9,10,9.3,24.7,cost-aware,47.9,none
+opencode-glm-53,opencode,glm-5.3,7,8,4,5,6.0,32.3,cost-aware,44.0,"flagship 1548-cross test fails deterministically (filler cells can accidentally complete a different cross); no README.md/requirements.txt; zero AI test coverage"
+opencode-codex,opencode,gpt-5.5,9,6,8,9,8.0,24.7,cost-aware,44.5,"none (single 276-line god-file, no bug)"
+opencode-opus,opencode,claude-opus-5,9,9,10,4,8.0,0.0,cost-aware,0.0,"none in game/AI logic. Real deliverable gap: no README.md and no requirements.txt anywhere in the repo, a direct TASK.md violation. Also the most expensive cell in the whole matrix ($36.66) -- became the new cost-group maximum, so it floors to 0 on efficiency (and therefore combined) despite the code itself being excellent, same floor effect as oh-my-humanize-fable and claude-code-sonnet"
+aider-codex,aider,gpt-5.5,9,9,9,9,9.0,83.9,cost-aware,86.9,none
+aider-fable,aider,claude-fable-5,7.5,9,8,9,8.4,50.3,cost-aware,65.0,"exact endgame solver threshold (<=9 empties) never reached in 200 simulations, effectively dead code"
+aider-kimi,aider,kimi-k3,9,8.5,6,8,7.9,68.5,cost-aware,73.6,"none in game logic; broken find_draw_board() helper breaks 3/18 shipped tests"
+aider-glm-53,aider,glm-5.3,8,8.5,6,7.5,7.5,73.9,cost-aware,74.4,"none in game/ai logic; endgame-optimality test never exercises anything real (checked=0 every run)"
+aider-sonnet,aider,claude-sonnet-5,9,8,4,8,7.3,52.2,cost-aware,61.7,"none in game logic; two real test-authoring bugs (never places the mark before checking; self-defeating endgame test); README falsely claims all tests pass"
+aider-qwen-max,aider,qwen3.8-max,8,8,3,5,6.0,100.0,duration-only,77.5,"none in game/AI logic; test suite has 2 real errors and never really exercises negamax; documented test command does not pass; TASK.md committed against instructions"
+aider-qwen,aider,qwen3.8-27b,0,6,2,2,2.5,DISQUALIFIED,failed,removed,"direction-deduplication bug produces 1820 crosses instead of 1548; RuntimeError at import; server cannot start, tests cannot run. Previously scored 57.1 on efficiency using real cost data before this review caught the failure -- that score measured how cheaply a broken deliverable was produced and has been removed."
+aider-opus,aider,claude-opus-5,,,,,,FAILED,failed,,"model output incompatible with aider's whole edit format; no deliverable ever produced, not reviewed"
+oh-my-humanize-codex,omh,gpt-5.5,,,,,,KILLED,killed,,"killed at 189s with one file; not reviewed"
