@@ -5,3 +5,4 @@ aider-*/
 .run-state-*
 __pycache__/
 .aider*
+.DS_Store
