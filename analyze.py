@@ -25,8 +25,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-BASELINE = "1e40f677"
-BASELINE_HASH = "1e40f677"
 PROMPT = timezone.utc
 
 def ts(s):
@@ -39,14 +37,33 @@ def fmt_duration(s):
 def git(base, *args):
     return subprocess.run(["git", "-C", str(base), *args], capture_output=True, text=True).stdout
 
+def normalize_harness(h):
+    """stats.csv has grown inconsistent labels over time (claude vs claude-code,
+    omh vs oh-my-humanize) -- collapse them to one canonical value per harness."""
+    h = (h or "").strip().lower()
+    if h in ("claude-code", "claude"):
+        return "claude-code"
+    if h in ("omh", "oh-my-humanize"):
+        return "omh"
+    return h  # opencode, aider
+
 def load_run(row):
-    harness = row["harness"]
+    harness = normalize_harness(row["harness"])
     start = ts(row["start_utc"])
     cutoff = start - 15
     if harness == "claude-code":
         bases = glob.glob(str(os.path.join(str(Path.home()), ".claude", "projects", "*" + row["run"] + "*")))
+    elif harness == "omh":
+        # Per-run slug, matching run.sh's own collector -- a bare glob over the
+        # whole sessions/ dir (the old behavior) pulls in every other omh run
+        # active around the same time, silently inflating tokens/cost/calls.
+        slug = "-research-ai-agent-4d-tictactoe-" + row["run"]
+        bases = [os.path.join(str(Path.home()), ".omp", "agent", "sessions", slug)]
     else:
-        bases = [os.path.join(str(Path.home()), ".omp", "agent", "sessions")]
+        # opencode/aider have no generic transcript source wired up here;
+        # main() falls back to stats.csv's own (harness-specific-collector)
+        # totals for these instead of silently reporting zero.
+        bases = []
     events, tools, tool_lat, per_call_in, per_call_out = [], [], [], [], []
     for base in bases:
         for f in glob.glob(os.path.join(base, "**", "*.jsonl"), recursive=True):
@@ -98,17 +115,42 @@ def load_run(row):
 
 def repo_metrics(dir_name):
     base = ROOT / dir_name
-    r = {"commits": 0, "files": 0, "added": 0}
+    r = {"commits": 0, "files": 0, "added": 0, "total_files": 0, "total_loc": 0}
     if not (base / ".git").exists():
         return r
-    log = git(base, "log", "--oneline", BASELINE_HASH + "..HEAD").splitlines()
+    # Each run repo has its own distinct baseline commit -- a hardcoded hash
+    # here matched none of them and silently produced 0/0/0 for every run.
+    baseline_lines = git(base, "rev-list", "--max-parents=0", "HEAD").strip().splitlines()
+    if not baseline_lines:
+        return r
+    baseline = baseline_lines[0]
+    log = git(base, "log", "--oneline", baseline + "..HEAD").splitlines()
     r["commits"] = len(log)
-    diff = git(base, "diff", "--stat", BASELINE)
+    diff = git(base, "diff", "--stat", baseline)
     if ", " in diff:
         parts = [p.split() for p in diff.strip().splitlines()[-1].split(", ")]
         r["files"] = int(parts[0][0])
         r["added"] = int(parts[1][0])
+    # Some early runs were squash-committed after the fact into a single
+    # commit ("restored from parent repo"), so baseline == HEAD and the diff
+    # above is empty even though the deliverable is real -- total tracked
+    # size is the only meaningful metric for those, so always compute it too.
+    files = [f for f in git(base, "ls-files").splitlines() if f and "__pycache__" not in f and not f.endswith(".pyc")]
+    r["total_files"] = len(files)
+    total_loc = 0
+    for f in files:
+        try:
+            total_loc += sum(1 for _ in open(base / f, "rb"))
+        except OSError:
+            pass
+    r["total_loc"] = total_loc
     return r
+
+def to_num(s):
+    try:
+        return float(s)
+    except (TypeError, ValueError):
+        return 0.0
 
 def main():
     rows = list(csv.DictReader(open(ROOT / "stats.csv")))
@@ -117,17 +159,33 @@ def main():
         sys.exit("no filled rows in stats.csv")
     reports = []
     for row in filled:
+        row = {**row, "harness": normalize_harness(row["harness"])}
         d = row["run"]
         data = load_run(row)
         repo = repo_metrics(d)
         events = data["events"]
-        start, end = ts(row["start_utc"]), ts(row["end_utc"])
+        start = ts(row["start_utc"])
+        end = ts(row["end_utc"]) if row.get("end_utc") else start + to_num(row.get("duration_s"))
         dur = end - start
         calls = len(events)
-        tin = sum(e[1] for e in events)
-        tout = sum(e[2] for e in events)
-        tcached = sum(e[3] for e in events)
-        cost = sum(e[4] for e in events)
+        # stats.csv is authoritative for tokens/cost -- it's collected right at
+        # harness-exit time by each harness's own dedicated collector (run.sh)
+        # and is what gets hand-corrected for edge cases (interrupted runs,
+        # multi-segment resumes). Recomputing from raw transcripts here is
+        # strictly a fallback for whatever stats.csv doesn't have, since an
+        # omh session slug directory can accumulate files from more than one
+        # invocation over time and a birthtime cutoff alone can't always tell
+        # them apart -- that silently inflated some historical rows here.
+        csv_tin, csv_tout, csv_tcached = (to_num(row.get("tokens_in")), to_num(row.get("tokens_out")),
+                                           to_num(row.get("tokens_cached")))
+        if csv_tin or csv_tout or csv_tcached:
+            tin, tout, tcached = csv_tin, csv_tout, csv_tcached
+        else:
+            tin = sum(e[1] for e in events)
+            tout = sum(e[2] for e in events)
+            tcached = sum(e[3] for e in events)
+        csv_cost = to_num(row.get("cost_usd"))
+        cost = csv_cost if csv_cost else sum(e[4] for e in events)
         tool_lat = data["tool_lat"]
         tool_n = len(tool_lat) or len(data["tools"])
         tool_err_pct = 100 * (sum(t[2] for t in tool_lat) / tool_n) if tool_n else 0
@@ -150,9 +208,13 @@ def build_markdown(reports):
     md.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for r in reports:
         tokens_s = f"{(r['tin']+r['tout']+r['tcached'])/r['dur']:.1f}" if r["dur"] else "-"
-        cost = f"${r['cost']:.4f}" if r["harness"] == "oh-my-humanize" else "n/a"
+        cost = f"${r['cost']:.4f}" if r["cost"] else "n/a"
         tpc = f"{(r['tin']+r['tout'])/r['repo']['commits']:,.0f}" if r["repo"]["commits"] else "-"
-        tpl = f"{(r['tin']+r['tout'])/r['repo']['added']:,.0f}" if r["repo"]["added"] else "-"
+        # LOC-added-since-baseline is 0 for the handful of squash-committed
+        # runs (baseline == HEAD); fall back to total tracked LOC so those
+        # still get a meaningful (if less precise) tokens/line figure.
+        loc_for_ratio = r["repo"]["added"] or r["repo"]["total_loc"]
+        tpl = f"{(r['tin']+r['tout'])/loc_for_ratio:,.0f}" if loc_for_ratio else "-"
         md.append(f"| {r['run']} | {fmt_duration(r['dur'])} | {r['calls']} | {r['tin']:,} | {r['tout']:,} | {r['tcached']:,} "
                   f"| {r['cache_ratio']:.1%} | {tokens_s} | {cost} | {tpc} | {tpl} | {r['tool_n']} | {r['tool_err_pct']:.1f}% | {r['tool_avg_ms']} |")
     md.append("")
@@ -164,24 +226,28 @@ def build_markdown(reports):
     md.append("## Per-run insights")
     for r in reports:
         tokens = r["tin"] + r["tout"] + r["tcached"]
+        loc_for_ratio = r["repo"]["added"] or r["repo"]["total_loc"]
         md.append(f"- **{r['run']}**: {fmt_duration(r['dur'])}, {r['calls']} calls, {tokens:,} tokens ({r['cache_ratio']:.1%} cached), "
-                  f"{r['repo']['commits']} commits, {r['repo']['added']} lines, {tokens/(r['repo']['commits'] or 1):,.0f} tok/commit, "
-                  f"{tokens/(r['repo']['added'] or 1):,.0f} tok/line" + (f", ${r['cost']:.4f}" if r["harness"] == "oh-my-humanize" else ""))
+                  f"{r['repo']['commits']} commits, {r['repo']['added']} lines added ({r['repo']['total_loc']} total), "
+                  f"{tokens/(r['repo']['commits'] or 1):,.0f} tok/commit, "
+                  f"{tokens/(loc_for_ratio or 1):,.0f} tok/line" + (f", ${r['cost']:.4f}" if r["cost"] else ""))
     (OUT / "summary.md").write_text("\n".join(md) + "\n")
 
 def build_metrics_csv(reports):
     cols = ["run", "harness", "model", "duration_s", "api_calls", "tokens_in", "tokens_out", "tokens_cached",
             "cache_ratio", "tool_calls", "tool_err_pct", "tool_avg_ms", "cost_usd", "commits", "files_changed",
-            "loc_added", "tokens_per_commit", "tokens_per_line"]
+            "loc_added", "total_files", "total_loc", "tokens_per_commit", "tokens_per_line"]
     rows = [cols]
     for r in reports:
         tokens = r["tin"] + r["tout"] + r["tcached"]
+        loc_for_ratio = r["repo"]["added"] or r["repo"]["total_loc"]
         rows.append([r["run"], r["harness"], r["model"], int(r["dur"]), r["calls"], r["tin"], r["tout"], r["tcached"],
                      f"{r['cache_ratio']:.4f}", r["tool_n"], f"{r['tool_err_pct']:.2f}", r["tool_avg_ms"],
-                     f"{r['cost']:.4f}" if r["harness"] == "oh-my-humanize" else "",
+                     f"{r['cost']:.4f}" if r["cost"] else "",
                      r["repo"]["commits"], r["repo"]["files"], r["repo"]["added"],
+                     r["repo"]["total_files"], r["repo"]["total_loc"],
                      f"{tokens/r['repo']['commits']:.1f}" if r["repo"]["commits"] else "",
-                     f"{tokens/r['repo']['added']:.1f}" if r["repo"]["added"] else ""])
+                     f"{tokens/loc_for_ratio:.1f}" if loc_for_ratio else ""])
     (OUT / "metrics.csv").write_text("\n".join(",".join(map(str, r)) for r in rows) + "\n")
 
 def build_plots(reports):
@@ -210,7 +276,7 @@ def build_plots(reports):
         ax = [ax]
     for i, r in enumerate(reports):
         ax[i][0].set_title(r["run"])
-        is_cost = r["harness"] == "oh-my-humanize"
+        is_cost = r["harness"] == "omh"
         series = [e[4] for e in r["events"]] if is_cost else [e[1] + e[2] + e[3] for e in r["events"]]
         ax[i][0].plot([(e[0] - r["start"]) / 60 for e in r["events"]],
                       np.cumsum(series) if is_cost else np.cumsum(series) / 1e6)
@@ -220,7 +286,7 @@ def build_plots(reports):
             ax[i][1].barh(list(names), list(counts), color=colors[i % 4])
         ax[i][1].set_title("tool calls")
     fig.tight_layout()
-    fig.savefig(OUT / ("cost_over_time.png" if any(r["harness"] == "oh-my-humanize" for r in reports) else "tokens_vs_cost.png"), dpi=110)
+    fig.savefig(OUT / ("cost_over_time.png" if any(r["harness"] == "omh" for r in reports) else "tokens_vs_cost.png"), dpi=110)
     plt.close(fig)
 
     fig, ax = plt.subplots(n, 2, figsize=(13, 4 * n))
