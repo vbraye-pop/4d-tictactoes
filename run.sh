@@ -25,7 +25,7 @@ TARGETS=(
   aider-qwen:aider:openrouter/qwen/qwen3.8-27b
   aider-kimi:aider:openrouter/moonshotai/kimi-k3
   opencode-sonnet:opencode:openrouter/anthropic/claude-sonnet-5
-  opencode-qwen-max:opencode:openrouter/qwen/qwen3.8-max
+  opencode-qwen-max:opencode:openrouter/qwen/qwen3.8-max-0902
   opencode-glm-53:opencode:openrouter/z-ai/glm-5.3
   opencode-codex:opencode:openrouter/openai/gpt-5.5
   aider-opus:aider:openrouter/anthropic/claude-opus-5
@@ -385,13 +385,23 @@ elif [ "$HARNESS" = "aider" ]; then
   PREV_STATE=""
   EMPTY_PASSES=0
   for i in $(seq 1 20); do
-    # kimi-k3 is a thinking model; needs a high thinking budget to produce content
+    # thinking models need a high reasoning budget, otherwise reasoning prose
+    # bleeds into the main output and blows the per-call token limit before any
+    # edit is produced (confirmed on sonnet: 4/4 attempts died this way at 0
+    # commits until this flag was added)
     EXTRA=""
-    # thinking models need a high reasoning budget to produce content
-    if [[ "$MODEL" == *"kimi"* ]] || [[ "$MODEL" == *"opus"* ]] || [[ "$MODEL" == *"fable"* ]]; then
-      EXTRA="--thinking-tokens 16384"
+    if [[ "$MODEL" == *"kimi"* ]] || [[ "$MODEL" == *"opus"* ]] || [[ "$MODEL" == *"fable"* ]] || [[ "$MODEL" == *"sonnet"* ]]; then
+      EXTRA="--thinking-tokens 32768"
     fi
-    aider --model "$MODEL" --yes-always --no-show-model-warnings --architect --auto-accept-architect --edit-format whole $EXTRA --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete." || true
+    # aider 0.86.2 does not pick up OPENROUTER_API_KEY from the environment on its
+    # own (litellm.completion() does; aider's own key-resolution layer doesn't) --
+    # it must be passed explicitly or every call 401s with "User not found".
+    # --model-settings-file forces an explicit max_tokens per model (see
+    # .aider.model.settings.yml): without it OpenRouter silently caps
+    # completions far below the model's real max_output_tokens, and aider
+    # surfaces that as "hit a token limit" with 0 commits -- --thinking-tokens
+    # alone does not fix this, confirmed on sonnet-5 across 3 attempts.
+    aider --model "$MODEL" --api-key "openrouter=$OPENROUTER_API_KEY" --model-settings-file "$ROOT/.aider.model.settings.yml" --yes-always --no-show-model-warnings --architect --auto-accept-architect --edit-format whole $EXTRA --file TASK.md --message "Build the entire task. Write all files needed. Work autonomously until complete." || true
     # stop only after 3 consecutive passes with no new state
     CUR_STATE=$(git -C "$ROOT/$DIR" status --porcelain 2>/dev/null | sort | md5)
     CUR_COMMITS=$(git -C "$ROOT/$DIR" rev-list --count HEAD 2>/dev/null || echo 0)
@@ -406,9 +416,10 @@ elif [ "$HARNESS" = "aider" ]; then
     PREV_STATE=$CUR_STATE
     PREV_COMMITS=$CUR_COMMITS
   done
-  # clean aider's tracking files so the dir passes pristine check on rerun
-  rm -f "$ROOT/$DIR/.aider.chat.history.md" "$ROOT/$DIR/.aider.input.history"
-  rm -rf "$ROOT/$DIR/.aider.tags.cache.v4"
+  # .aider.chat.history.md is left in place: collect_stats (the EXIT trap) reads it
+  # for duration, and the pristine check already tolerates untracked .aider* files
+  # (see the BAD= filter above), so a future run doesn't need this cleaned up here.
+  # --reset's `git clean -fd` handles it before the next run starts.
 else
   export PATH="$HOME/.bun/bin:$PATH"
   omh --model "$MODEL" "$PROMPT"
